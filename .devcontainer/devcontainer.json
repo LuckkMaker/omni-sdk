@@ -1,0 +1,30 @@
+{
+    "name": "OMNI Dev Container",
+    "privileged": true,
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "workspaceFolder": "/workspace",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "twxs.cmake",
+                "ms-vscode.cmake-tools",
+                "mcu-debug.debug-tracker-vscode",
+                "mcu-debug.memory-view",
+                "mcu-debug.rtos-views",
+                "mcu-debug.peripheral-viewer",
+                "marus25.cortex-debug",
+                "Arm.keil-studio-pack",
+                "ms-azuretools.vscode-docker"
+            ],
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash",
+                "cmake.configureOnOpen": true,
+                "cmake.generator": "Ninja"
+            }
+        }
+    }
+}

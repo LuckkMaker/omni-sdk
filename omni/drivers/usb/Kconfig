@@ -1,0 +1,9 @@
+menuconfig OMNI_DRIVER_USB
+    bool "USB"
+    default n
+    help
+        Enable the USB Phy driver configuration.
+
+if OMNI_DRIVER_USB
+
+endif # OMNI_DRIVER_USB

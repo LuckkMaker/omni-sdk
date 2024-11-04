@@ -1,0 +1,6 @@
+menu "Components"
+
+rsource "console/Kconfig"
+rsource "cherryusb/Kconfig"
+
+endmenu # Components

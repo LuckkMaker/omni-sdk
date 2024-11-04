@@ -1,0 +1,3 @@
+@echo off
+SET CURRENT_DIR=%~dp0
+SETX OMNI_BASE %CURRENT_DIR%

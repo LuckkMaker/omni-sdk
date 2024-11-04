@@ -1,0 +1,9 @@
+menuconfig OMNI_DRIVER_TIMER
+    bool "Timer"
+    default n
+    help
+        Enable the Timer driver configuration.
+
+if OMNI_DRIVER_TIMER
+
+endif # OMNI_DRIVER_TIMER

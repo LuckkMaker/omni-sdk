@@ -1,0 +1,13 @@
+menu "Targets"
+
+    config CUSTOM_LINKER_SCRIPT
+        bool "Use custom linker script"
+        help
+            Select this option to use a custom linker script.
+
+    # config CUSTOM_DRIVER_INIT
+    #     bool "Use custom driver init"
+    #     help
+    #         Select this option to use a custom driver init.
+
+endmenu # Targets

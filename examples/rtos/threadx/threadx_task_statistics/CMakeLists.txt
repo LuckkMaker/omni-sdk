@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.26)
+
+# Set the board to be used for omni
+set(BOARD stm32f407ig)
+
+# omni settings need to be set before including omni
+find_package(OMNI REQUIRED HINTS $ENV{OMNI_BASE})
+project(threadx_task_statistics)
+
+target_sources(app INTERFACE
+    # Add user sources here
+    application/main.c
+)
+
+target_compile_definitions(app INTERFACE
+    # Add user defined symbols
+    TX_INCLUDE_USER_DEFINE_FILE
+    TX_ENABLE_STACK_CHECKING
+    TX_EXECUTION_PROFILE_ENABLE
+)
+
+target_include_directories(app INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    # Add user defined include paths
+    application
+)
+
+target_link_options(app INTERFACE
+    -u _printf_float
+)

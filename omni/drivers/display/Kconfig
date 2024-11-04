@@ -1,0 +1,11 @@
+menuconfig OMNI_DRIVER_DISPLAY
+    bool "Display"
+    default n
+    help
+        Enable the display controller drivers configuration.
+
+if OMNI_DRIVER_DISPLAY
+
+rsource "Kconfig.ssd1306"
+
+endif # OMNI_DRIVER_DISPLAY

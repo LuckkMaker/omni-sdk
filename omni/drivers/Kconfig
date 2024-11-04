@@ -1,0 +1,21 @@
+menuconfig OMNI_DRIVER
+    bool "Drivers"
+    default n
+    help
+        Enable the drivers configuration.
+
+if OMNI_DRIVER
+    config OMNI_ASSERT
+        bool "Assert Enable"
+        default n
+        help
+            Enable the assert driver.
+
+rsource "display/Kconfig"
+rsource "i2c/Kconfig"
+rsource "usart/Kconfig"
+rsource "usb/Kconfig"
+rsource "timer/Kconfig"
+
+endif # OMNI_DRIVER
+

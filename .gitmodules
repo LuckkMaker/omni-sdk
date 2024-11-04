@@ -1,0 +1,33 @@
+[submodule "omni/targets/apm/apm32f4/apm32dalf4_fw"]
+	path = omni/targets/apm/apm32f4/apm32dalf4_fw
+	url = https://github.com/LuckkMaker/apm32dalf4_fw
+[submodule "omni/targets/stm/stm32f1/stm32cubef1_fw"]
+	path = omni/targets/stm/stm32f1/stm32cubef1_fw
+	url = https://github.com/LuckkMaker/stm32cubef1_fw
+[submodule "omni/targets/stm/stm32f4/stm32cubef4_fw"]
+	path = omni/targets/stm/stm32f4/stm32cubef4_fw
+	url = https://github.com/LuckkMaker/stm32cubef4_fw
+[submodule "omni/targets/stm/stm32h7/stm32cubeh7_fw"]
+	path = omni/targets/stm/stm32h7/stm32cubeh7_fw
+	url = https://github.com/LuckkMaker/stm32cubeh7_fw
+[submodule "omni/libraries/cmsis-freertos"]
+	path = omni/libraries/cmsis-freertos
+	url = https://github.com/LuckkMaker/omni-cmsis-freertos
+[submodule "omni/libraries/cmsis-rtx"]
+	path = omni/libraries/cmsis-rtx
+	url = https://github.com/LuckkMaker/omni-cmsis-rtx
+[submodule "omni/libraries/threadx"]
+	path = omni/libraries/threadx
+	url = https://github.com/LuckkMaker/omni-threadx
+[submodule "omni/libraries/letter_shell"]
+	path = omni/libraries/letter_shell
+	url = https://github.com/LuckkMaker/omni-letter-shell
+[submodule "omni/libraries/cherryusb"]
+	path = omni/libraries/cherryusb
+	url = https://github.com/LuckkMaker/omni-cherryusb
+[submodule "omni/libraries/segger_rtt"]
+	path = omni/libraries/segger_rtt
+	url = https://github.com/LuckkMaker/omni-segger-rtt
+[submodule "omni/libraries/u8g2"]
+	path = omni/libraries/u8g2
+	url = https://github.com/LuckkMaker/omni-u8g2

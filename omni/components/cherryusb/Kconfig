@@ -1,0 +1,10 @@
+menuconfig COMPONENT_CHERRYUSB
+    bool "CherryUSB"
+    default n
+    select USB
+    help
+        Enable the CherryUSB component configuration.
+
+if COMPONENT_CHERRYUSB
+
+endif # COMPONENT_CHERRYUSB

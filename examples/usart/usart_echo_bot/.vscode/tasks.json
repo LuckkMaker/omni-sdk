@@ -1,0 +1,48 @@
+{
+    "tasks": [
+        // OpenOCD Erase Chip Task
+        {
+            "label": "DAP-Link Erase Chip",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f", "interface/cmsis-dap.cfg",
+                "-f", "target/stm32f4x.cfg",
+                "-c", "init",
+                "-c", "halt",
+                "-c", "stm32f4x mass_erase 0",
+                "-c", "exit"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "panel": "dedicated",
+                "close": true
+            }
+        },
+        {
+            "label": "J-Link Erase Chip",
+            "type": "shell",
+            "command": "JLink.exe",
+            "args": [
+                "-device", "STM32F407VG",
+                "-if", "SWD",
+                "-speed", "10000",
+                "-CommandFile", "./tools/jlink/erase.jlink"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "panel": "dedicated",
+                "close": true
+            }
+        },
+    ],
+    "version": "2.0.0"
+}

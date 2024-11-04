@@ -1,0 +1,9 @@
+menuconfig OMNI_DRIVER_I2C
+    bool "I2C"
+    default n
+    help
+        Enable the I2C driver configuration.
+
+if OMNI_DRIVER_I2C
+
+endif # OMNI_DRIVER_I2C

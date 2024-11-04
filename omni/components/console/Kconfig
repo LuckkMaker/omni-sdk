@@ -1,0 +1,9 @@
+menuconfig COMPONENT_CONSOLE
+    bool "Console"
+    default n
+    help
+        Enable the console component configuration.
+
+if COMPONENT_CONSOLE
+
+endif # COMPONENT_CONSOLE

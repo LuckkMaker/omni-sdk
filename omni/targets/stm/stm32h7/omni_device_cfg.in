@@ -1,0 +1,278 @@
+/**
+  * @file    omni_device_cfg.h
+  * @author  LuckkMaker
+  * @brief   OMNI device configuration for STM32H7 series
+  * @version 1.0.1
+  * @date    22-Oct-2024
+  * @attention
+  *
+  * Copyright (c) 2024 LuckkMaker
+  * All rights reserved.
+  *
+  * Licensed under the Apache License, Version 2.0 (the "License");
+  * you may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at
+  *
+  *     http://www.apache.org/licenses/LICENSE-2.0
+  *
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef OMNI_DEVICE_CFG_H
+#define OMNI_DEVICE_CFG_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define CONFIG_SOC_FAMILY_STM32H7XX
+
+// GPIO Ports
+#define GPIO_PORT0          GPIOA
+#define GPIO_PORT1          GPIOB
+#define GPIO_PORT2          GPIOC
+#define GPIO_PORT3          GPIOD
+#define GPIO_PORT4          GPIOE
+#define GPIO_PORT5          GPIOF
+#define GPIO_PORT6          GPIOG
+#define GPIO_PORT7          GPIOH
+#define GPIO_PORT8          GPIOI
+#define GPIO_PORT9          GPIOJ
+#define GPIO_PORT10         GPIOK
+#define GPIO_PORT(num)      GPIO_PORT##num
+
+// Get PLL source
+#define PLL_SRC0            RCC_PLLSOURCE_HSI
+#define PLL_SRC1            RCC_PLLSOURCE_HSE
+#define PLL_SRC2            RCC_PLLSOURCE_CSI
+#define PLL_SRC(num)        PLL_SRC##num
+// Get PLL RGE
+#define PLL_RGE(num)        RCC_PLL1VCIRANGE_##num
+// Get PLL VCOSEL
+#define PLL_VCOSEL0         RCC_PLL1VCOWIDE
+#define PLL_VCOSEL1         RCC_PLL1VCOMEDIUM
+#define PLL_VCOSEL(num)     PLL_VCOSEL##num
+
+// OSC type
+#define OSC_TYPE_HSE        RCC_OSCILLATORTYPE_HSE
+#define OSC_TYPE_HSI        RCC_OSCILLATORTYPE_HSI
+#define OSC_TYPE_LSE        RCC_OSCILLATORTYPE_LSE
+#define OSC_TYPE_LSI        RCC_OSCILLATORTYPE_LSI
+#define OSC_TYPE_CSI        RCC_OSCILLATORTYPE_CSI
+#define OSC_TYPE_HSI48      RCC_OSCILLATORTYPE_HSI48
+
+// Get SYSCLK source
+#define SYSCLK_SRC0         RCC_SYSCLKSOURCE_HSI
+#define SYSCLK_SRC1         RCC_SYSCLKSOURCE_HSE
+#define SYSCLK_SRC2         RCC_SYSCLKSOURCE_PLLCLK
+#define SYSCLK_SRC3         RCC_SYSCLKSOURCE_CSI
+#define SYSCLK_SRC(num)     SYSCLK_SRC##num
+// Get SYSCLK prescaler
+#define SYSCLK_DIV(num)     RCC_SYSCLK_DIV##num
+// Get AHB prescaler
+#define AHB_DIV(num)        RCC_HCLK_DIV##num
+// Get APB1 prescaler
+#define APB1_DIV(num)       RCC_APB1_DIV##num
+// Get APB2 prescaler
+#define APB2_DIV(num)       RCC_APB2_DIV##num
+// Get APB3 prescaler
+#define APB3_DIV(num)       RCC_APB3_DIV##num
+// Get APB4 prescaler
+#define APB4_DIV(num)       RCC_APB4_DIV##num
+// Get flash latency
+#define FLASH_LATENCY(num)  FLASH_LATENCY_##num
+// Get power regulator voltage scaling
+#define PWR_REG_VOLTAGE(num) PWR_REGULATOR_VOLTAGE_SCALE##num
+
+// Get DMA instance
+#define _DMA_INS(num)               DMA##num
+#define DMA_INS(num)                _DMA_INS(num)
+// Get DMA stream
+#define _DMA_STREAM(num, stream)    DMA##num##_Stream##stream
+#define DMA_STREAM(num, stream)     _DMA_STREAM(num, stream)
+// Get DMA channel
+#define DMA_CHANNEL(num)            DMA_CHANNEL_##num
+// Get DMA priority
+#define DMA_PRIORITY0               DMA_PRIORITY_LOW
+#define DMA_PRIORITY1               DMA_PRIORITY_MEDIUM
+#define DMA_PRIORITY2               DMA_PRIORITY_HIGH
+#define DMA_PRIORITY3               DMA_PRIORITY_VERY_HIGH
+#define DMA_PRIORITY(num)           DMA_PRIORITY##num
+// Get DMA IRQ number
+#define _DMA_IRQ_NUM(num, stream)   DMA##num##_Stream##stream##_IRQn
+#define DMA_IRQ_NUM(num, stream)    _DMA_IRQ_NUM(num, stream)
+
+//-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
+
+// <h> Interrupt Configuration
+//  <h> USART Interrupt Priority
+//  <o> USART1 IRQ Priority <0-15>
+#define CONFIG_USART1_IRQ_PRIO 1
+//  <o> USART2 IRQ Priority <0-15>
+#define CONFIG_USART2_IRQ_PRIO 1
+//  <o> USART3 IRQ Priority <0-15>
+#define CONFIG_USART3_IRQ_PRIO 1
+//  <o> UART4 IRQ Priority <0-15>
+#define CONFIG_UART4_IRQ_PRIO 1
+//  <o> UART5 IRQ Priority <0-15>
+#define CONFIG_UART5_IRQ_PRIO 1
+//  <o> USART6 IRQ Priority <0-15>
+#define CONFIG_USART6_IRQ_PRIO 1
+//  <o> UART7 IRQ Priority <0-15>
+#define CONFIG_UART7_IRQ_PRIO 1
+//  <o> UART8 IRQ Priority <0-15>
+#define CONFIG_UART8_IRQ_PRIO 1
+//  </h>
+//  <h> I2C Interrupt Priority
+//  <o> I2C1 Event IRQ Priority <0-15>
+#define CONFIG_I2C1_EV_IRQ_PRIO 1
+//  <o> I2C1 Error IRQ Priority <0-15>
+#define CONFIG_I2C1_ER_IRQ_PRIO 1
+//  <o> I2C2 Event IRQ Priority <0-15>
+#define CONFIG_I2C2_EV_IRQ_PRIO 1
+//  <o> I2C2 Error IRQ Priority <0-15>
+#define CONFIG_I2C2_ER_IRQ_PRIO 1
+//  <o> I2C3 Event IRQ Priority <0-15>
+#define CONFIG_I2C3_EV_IRQ_PRIO 1
+//  <o> I2C3 Error IRQ Priority <0-15>
+#define CONFIG_I2C3_ER_IRQ_PRIO 1
+//  <o> I2C4 Event IRQ Priority <0-15>
+#define CONFIG_I2C4_EV_IRQ_PRIO 1
+//  <o> I2C4 Error IRQ Priority <0-15>
+#define CONFIG_I2C4_ER_IRQ_PRIO 1
+//  </h>
+//  <h> USB Interrupt Priority
+//  <o> USB_OTG_FS IRQ Priority <0-15>
+#define CONFIG_USB_OTG_FS_IRQ_PRIO 1
+//  </h>
+// </h>
+
+// <h> Oscillator Configuration
+//  <o> HSE State <0=>Disable <1=>Bypass <2=>Crystal
+#define CONFIG_HSE_STATE 2
+#if (CONFIG_HSE_STATE == 1)
+#define CONFIG_HSE_BYPASS 1
+#elif (CONFIG_HSE_STATE == 2)
+#define CONFIG_HSE_CRYSTAL 1
+#endif /* CONFIG_HSE_STATE */
+//  <o> HSE Frequency <4000000-48000000>
+#define CONFIG_HSE_FREQ 25000000
+#define HSE_VALUE CONFIG_HSE_FREQ
+//  <o> HSI State <0=>Disable <1=>Enable
+#define CONFIG_HSI_STATE 0
+//  <o> HSI Frequency
+#define CONFIG_HSI_FREQ 64000000
+#define HSI_VALUE CONFIG_HSI_FREQ
+//  <o> HSI48 State <0=>Disable <1=>Enable
+#define CONFIG_HSI48_STATE 0
+//  <o> HSI48 Frequency
+#define CONFIG_HSI48_FREQ 48000000
+//  <o> LSE State <0=>Disable <1=>Bypass <2=>Crystal
+#define CONFIG_LSE_STATE 0
+#if (CONFIG_LSE_STATE == 1)
+#define CONFIG_LSE_BYPASS 1
+#elif (CONFIG_LSE_STATE == 2)
+#define CONFIG_LSE_CRYSTAL 1
+#endif /* CONFIG_LSE_STATE */
+//  <o> LSE Frequency
+#define CONFIG_LSE_FREQ 32768
+#define LSE_VALUE CONFIG_LSE_FREQ
+//  <o> LSI State <0=>Disable <1=>Enable
+#define CONFIG_LSI_STATE 0
+//  <o> LSI Frequency
+#define CONFIG_LSI_FREQ 32000
+#define LSI_VALUE CONFIG_LSI_FREQ
+//  <o> CSI State <0=>Disable <1=>Enable
+#define CONFIG_CSI_STATE 0
+//  <o> CSI Frequency
+#define CONFIG_CSI_FREQ 4000000
+#define CSI_VALUE CONFIG_CSI_FREQ
+//  <e> PLL Configuration
+//   <i> Enable PLL Configuration
+#define CONFIG_PLL 1
+//    <o> PLL Source <0=>HSI <1=>HSE <2=>CSI
+#define CONFIG_PLL_SRC PLL_SRC(1)
+//    <o> PLL M <1-63>
+#define CONFIG_PLL_M 5
+//    <o> PLL N <4-512>
+#define CONFIG_PLL_N 192
+//    <o> PLL P <2-128:2>
+#define CONFIG_PLL_P 2
+//    <o> PLL Q <1-128>
+#define CONFIG_PLL_Q 4
+//    <o> PLL R <1-128>
+#define CONFIG_PLL_R 2
+//    <o> PLL input frequency range <0=>1-2MHz <1=>2-4MHz <2=>4-8MHz <3=>8-16MHz
+#define CONFIG_PLL_RGE PLL_RGE(2)
+//    <o> PLL VCO frequency range <0=>192-960MHz <1=>150-420MHz
+#define CONFIG_PLL_VCOSEL PLL_VCOSEL(0)
+//    <o> PLL fractional part <0-8191>
+#define CONFIG_PLL_FRACN 0
+//  </e>
+// </h>
+
+#if (CONFIG_HSE_STATE != 0)
+#if (CONFIG_LSE_STATE != 0)
+#define CONFIG_OSC_TYPE (OSC_TYPE_HSE | OSC_TYPE_LSE)
+#else
+#if (CONFIG_LSI_STATE != 0)
+#define CONFIG_OSC_TYPE (OSC_TYPE_HSE | OSC_TYPE_LSI)
+#else
+#define CONFIG_OSC_TYPE OSC_TYPE_HSE
+#endif /* CONFIG_LSI_STATE */
+#endif /* CONFIG_LSE_STATE */
+#else
+#if (CONFIG_LSE_STATE != 0)
+#define CONFIG_OSC_TYPE (OSC_TYPE_HSI | OSC_TYPE_LSE)
+#else
+#if (CONFIG_LSI_STATE != 0)
+#define CONFIG_OSC_TYPE (OSC_TYPE_HSI | OSC_TYPE_LSI)
+#else
+#define CONFIG_OSC_TYPE OSC_TYPE_HSI
+#endif /* CONFIG_LSI_STATE */
+#endif /* CONFIG_LSE_STATE */
+#endif /* CONFIG_HSE_STATE */
+
+#if (CONFIG_CSI_STATE != 0)
+#define CONFIG_OSC_TYPE (CONFIG_OSC_TYPE | OSC_TYPE_CSI)
+#endif /* CONFIG_CSI_STATE */
+
+#if (CONFIG_HSI48_STATE != 0)
+#define CONFIG_OSC_TYPE (CONFIG_OSC_TYPE | OSC_TYPE_HSI48)
+#endif /* CONFIG_HSI48_STATE */
+
+// <h> Clock Configuration
+//  <o> Flash Latency <0-7>
+#define CONFIG_FLASH_LATENCY FLASH_LATENCY(4)
+//  <o> Power Regulator Voltage Scaling <0=>Scale 0 <1=>Scale 1 <2=>Scale 2 <3=>Scale 3
+#define CONFIG_PWR_REG_VOLTAGE PWR_REG_VOLTAGE(0)
+//  <o> System Clock <1-999999999>
+#define CONFIG_SYSCLK_FREQ 480000000
+//  <o> System Clock Source <0=>HSI <1=>HSE <2=>PLL <3=>CSI
+#define CONFIG_SYSCLK_SRC SYSCLK_SRC(2)
+//  <o> System Clock Prescaler <1=>1 <2=>2 <4=>4 <8=>8 <16=>16 <64=>64 <128=>128 <256=>256 <512=>512
+#define CONFIG_SYSCLK_PRESC SYSCLK_DIV(1)
+//  <o> AHB Prescaler <1=>1 <2=>2 <4=>4 <8=>8 <16=>16 <64=>64 <128=>128 <256=>256 <512=>512
+#define CONFIG_AHB_PRESC AHB_DIV(2)
+//  <o> APB1 Prescaler <1=>1 <2=>2 <4=>4 <8=>8 <16=>16
+#define CONFIG_APB1_PRESC APB1_DIV(2)
+//  <o> APB2 Prescaler <1=>1 <2=>2 <4=>4 <8=>8 <16=>16
+#define CONFIG_APB2_PRESC APB2_DIV(2)
+//  <o> APB3 Prescaler <1=>1 <2=>2 <4=>4 <8=>8 <16=>16
+#define CONFIG_APB3_PRESC APB3_DIV(2)
+//  <o> APB4 Prescaler <1=>1 <2=>2 <4=>4 <8=>8 <16=>16
+#define CONFIG_APB4_PRESC APB4_DIV(2)
+// </h>
+
+//-------- <<< end of configuration section >>> --------------------------------
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* OMNI_DEVICE_CFG_H */

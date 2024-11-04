@@ -1,0 +1,62 @@
+menu "Libraries"
+
+config U8G2
+    bool "U8g2"
+    default n
+
+config SEGGER_RTT
+    bool "Segger RTT"
+    default n
+
+config SHELL_LETTER
+    bool "Letter Shell"
+    default n
+
+config USE_RTOS
+    bool
+    default n if RTOS_NONE
+    default y if RTOS_CMSIS_FREERTOS
+    default y if RTOS_CMSIS_RTX
+    default y if RTOS_THREADX
+
+choice
+    prompt "RTOS"
+    default RTOS_NONE
+
+    config RTOS_NONE
+        bool "None"
+
+    config RTOS_CMSIS_RTX
+        bool "RTX"
+
+    config RTOS_CMSIS_FREERTOS
+        bool "FreeRTOS"
+
+    config RTOS_THREADX
+        bool "ThreadX"
+
+endchoice # RTOS
+
+choice
+    prompt "USB"
+    default USB_NONE
+
+    config USB_NONE
+        bool "None"
+
+    config USB_CHERRYUSB
+        bool "CherryUSB Stack"
+
+    config USB_STM32
+        bool "STM32 USB Stack"
+endchoice # USB
+
+if RTOS_THREADX
+    rsource "threadx/Kconfig.threadx"
+endif # RTOS_THREADX
+
+if USB_CHERRYUSB
+    rsource "cherryusb/Kconfig.cherryusb"
+endif # USB_CHERRYUSB
+
+endmenu # Libraries

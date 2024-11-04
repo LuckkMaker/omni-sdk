@@ -1,0 +1,9 @@
+menuconfig OMNI_DRIVER_USART
+    bool "USART"
+    default n
+    help
+        Enable the USART driver configuration.
+
+if OMNI_DRIVER_USART
+
+endif # OMNI_DRIVER_USART

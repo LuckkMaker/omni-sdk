@@ -1,0 +1,9 @@
+menuconfig SSD1306
+    bool "SSD1306"
+    default n
+    help
+        Enable the display controller driver for the SSD1306 display controller.
+
+if SSD1306
+
+endif # SSD1306
