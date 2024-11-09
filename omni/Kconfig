@@ -1,7 +1,5 @@
 mainmenu "OMNI Configuration"
 
-# rsource "targets/Kconfig"
-# rsource "boards/Kconfig"
 rsource "components/Kconfig"
 rsource "drivers/Kconfig"
 rsource "libraries/Kconfig"
