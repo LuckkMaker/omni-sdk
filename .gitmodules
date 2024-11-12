@@ -31,3 +31,6 @@
 [submodule "omni/libraries/u8g2"]
 	path = omni/libraries/u8g2
 	url = https://github.com/LuckkMaker/omni-u8g2
+[submodule "omni/libraries/usbx"]
+	path = omni/libraries/usbx
+	url = https://github.com/LuckkMaker/omni-usbx
