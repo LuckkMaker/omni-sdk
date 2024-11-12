@@ -12,51 +12,55 @@ config SHELL_LETTER
     bool "Letter Shell"
     default n
 
+menu "RTOS"
+
+config RTOS_CMSIS_RTX
+    bool "CMSIS RTX"
+    default n
+
+config RTOS_CMSIS_FREERTOS
+    bool "CMSIS FreeRTOS"
+    default n
+
+config RTOS_THREADX
+    bool "ThreadX"
+    default n
+
+if RTOS_THREADX
+    rsource "threadx/Kconfig"
+endif # RTOS_THREADX
+
+endmenu # RTOS
+
+menu "USB"
+
+config USB_CHERRYUSB
+    bool "Cherry USB"
+    default n
+
+if USB_CHERRYUSB
+    rsource "cherryusb/Kconfig"
+endif # USB_CHERRYUSB
+
+config USB_STM32
+    bool "STM32 USB"
+    default n
+
+config USB_USBX
+    bool "USBX"
+    default n
+
+if USB_USBX
+    rsource "usbx/Kconfig"
+endif # USB_USBX
+
+endmenu # USB
+
 config USE_RTOS
     bool
     default n if RTOS_NONE
     default y if RTOS_CMSIS_FREERTOS
     default y if RTOS_CMSIS_RTX
     default y if RTOS_THREADX
-
-choice
-    prompt "RTOS"
-    default RTOS_NONE
-
-    config RTOS_NONE
-        bool "None"
-
-    config RTOS_CMSIS_RTX
-        bool "RTX"
-
-    config RTOS_CMSIS_FREERTOS
-        bool "FreeRTOS"
-
-    config RTOS_THREADX
-        bool "ThreadX"
-
-endchoice # RTOS
-
-choice
-    prompt "USB"
-    default USB_NONE
-
-    config USB_NONE
-        bool "None"
-
-    config USB_CHERRYUSB
-        bool "CherryUSB Stack"
-
-    config USB_STM32
-        bool "STM32 USB Stack"
-endchoice # USB
-
-if RTOS_THREADX
-    rsource "threadx/Kconfig.threadx"
-endif # RTOS_THREADX
-
-if USB_CHERRYUSB
-    rsource "cherryusb/Kconfig.cherryusb"
-endif # USB_CHERRYUSB
 
 endmenu # Libraries

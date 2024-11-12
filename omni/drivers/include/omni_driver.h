@@ -25,6 +25,7 @@
 #define OMNI_DRIVER_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "include/device.h"
 #if defined(CONFIG_OMNI_DRIVER)
 #include "drivers/init.h"
 #include "drivers/gpio.h"

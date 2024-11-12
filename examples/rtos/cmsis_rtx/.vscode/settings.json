@@ -1,11 +1,5 @@
 {
-    "cmake.generator": "Unix Makefiles",
-    "cmake.clearOutputBeforeBuild": true,
-    "cmake.buildTask": true,
-    "cmake.environment": {
-        "CLICOLOR_FORCE": "1"
-    },
-    "ceedlingExplorer.projectPath": "test",
+    "cmake.generator": "Ninja",
     "editor.tokenColorCustomizations": {
         "textMateRules": [
             {
@@ -29,14 +23,5 @@
                 "settings": { "foreground": "#13A10E" }
             },
         ]
-    },
-    "files.associations": {
-        "*.cjson": "jsonc",
-        "*.wxss": "css",
-        "*.wxs": "javascript",
-        "omni.h": "c",
-        "cmsis_os2.h": "c",
-        "command.h": "c",
-        "timer.h": "c"
     },
 }

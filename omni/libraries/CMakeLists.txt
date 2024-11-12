@@ -21,9 +21,11 @@ omni_add_subdirectory_ifdef(CONFIG_RTOS_THREADX threadx)
 omni_lib_link_ifdef(CONFIG_RTOS_THREADX omni-rtos omni-threadx)
 
 omni_add_subdirectory_ifdef(CONFIG_USB_CHERRYUSB cherryusb)
-omni_add_subdirectory_ifdef(CONFIG_USB_STM32 stm32_usb_device)
 omni_lib_link_ifdef(CONFIG_USB_CHERRYUSB omni-core omni-cherryusb)
+omni_add_subdirectory_ifdef(CONFIG_USB_STM32 stm32_usb_device)
 omni_lib_link_ifdef(CONFIG_USB_STM32 omni-core omni-stm32-usb-device)
+omni_add_subdirectory_ifdef(CONFIG_USB_USBX usbx)
+omni_lib_link_ifdef(CONFIG_USB_USBX omni-core omni-usbx)
 
 omni_add_subdirectory_ifdef(CONFIG_U8G2 u8g2)
 omni_lib_link_ifdef(CONFIG_U8G2 omni-core u8g2)

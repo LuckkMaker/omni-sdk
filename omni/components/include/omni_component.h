@@ -25,6 +25,7 @@
 #define OMNI_COMPONENT_H
 
 /* Includes ------------------------------------------------------------------*/
+#include "include/device.h"
 #if defined(CONFIG_COMPONENT_CHERRYUSB)
 #include "cherryusb/usb_device.h"
 #endif /* CONFIG_COMPONENT_CHERRYUSB */
