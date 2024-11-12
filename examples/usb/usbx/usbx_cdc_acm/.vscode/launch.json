@@ -1,0 +1,68 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "STM32F407IG with DAP-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F407IG",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f407xx.svd",
+            "configFiles": ["interface/cmsis-dap.cfg", "target/stm32f4x.cfg"],
+            "runToEntryPoint": "main",
+            //"preLaunchTask": "DAP-Link Erase Chip"
+        },
+        {
+            "name": "STM32F407IG with DAP-Link pyOCD",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "pyocd",
+            "device": "stm32f407ig",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f407xx.svd",
+            "runToEntryPoint": "main",
+            //"preLaunchTask": "DAP-Link Erase Chip"
+        },
+        {
+            "name": "STM32F407IG with J-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F407IG",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f407xx.svd",
+            "runToEntryPoint": "main",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+            // "serialNumber": "150710803", //jlink serial number
+            // "preLaunchTask": "J-Link Erase Chip"
+        },
+        {
+            "name": "STM32F407IG with ST-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F407IG",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f407xx.svd",
+            "runToEntryPoint": "main",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32f4x.cfg"
+            ],
+            // "preLaunchTask": "ST-Link Erase Chip"
+        },
+    ]
+}
+
