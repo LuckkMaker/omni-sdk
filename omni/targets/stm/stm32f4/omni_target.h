@@ -91,6 +91,8 @@ typedef const struct usb_ulpi_pin {
 } usb_ulpi_pin_t;
 
 typedef const struct usb_dev {
+    PCD_HandleTypeDef *pcd_handle;
+    HCD_HandleTypeDef *hcd_handle;
     USB_OTG_GlobalTypeDef *ins;
     IRQn_Type irq_num;
     uint8_t irq_prio;

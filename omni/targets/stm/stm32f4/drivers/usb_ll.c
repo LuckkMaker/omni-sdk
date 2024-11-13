@@ -35,7 +35,26 @@ static gpio_pin_t otg_fs_id_pin = { CONFIG_USB_OTG_FS_ID_PORT, CONFIG_USB_OTG_FS
 #if (CONFIG_USB_OTG_FS_SOF_DEF == 1)
 static gpio_pin_t otg_fs_sof_pin = { CONFIG_USB_OTG_FS_SOF_PORT, CONFIG_USB_OTG_FS_SOF_PIN, CONFIG_USB_OTG_FS_SOF_AF };
 #endif /* (CONFIG_USB_OTG_FS_SOF_DEF == 1) */
+#if (CONFIG_USB_OTG_FS_DEVICE == 1) && (CONFIG_USB_OTG_FS_HOST == 1)
+#error "USB OTG FS can't be both device and host"
+#endif /* (CONFIG_USB_OTG_FS_DEVICE == 1) && (CONFIG_USB_OTG_FS_HOST == 1) */
+#if (CONFIG_USB_OTG_FS_DEVICE == 1)
+static PCD_HandleTypeDef otg_fs_handle = {
+    .Instance = USB_OTG_FS,
+};
+#endif /* CONFIG_USB_OTG_FS_DEVICE */
+#if (CONFIG_USB_OTG_FS_HOST == 1)
+static HCD_HandleTypeDef otg_fs_handle = {
+    .Instance = USB_OTG_FS,
+};
+#endif /* CONFIG_USB_OTG_FS_HOST */
 static usb_dev_t otg_fs_dev = {
+#if (CONFIG_USB_OTG_FS_DEVICE == 1)
+    .pcd_handle = &otg_fs_handle,
+#endif /* CONFIG_USB_OTG_FS_DEVICE */
+#if (CONFIG_USB_OTG_FS_HOST == 1)
+    .hcd_handle = &otg_fs_handle,
+#endif /* CONFIG_USB_OTG_FS_HOST */
     .ins = USB_OTG_FS,
     .irq_num = OTG_FS_IRQn,
     .irq_prio = CONFIG_USB_OTG_FS_IRQ_PRIO,
