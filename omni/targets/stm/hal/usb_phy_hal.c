@@ -37,11 +37,13 @@ static usb_dev_t* usb_phy_get_dev(usb_num_t usb_num);
 const struct usb_phy_driver_api usb_phy_driver = {
     .open = usb_phy_open,
     .close = usb_phy_close,
-    // .start = usb_phy_start,
-    // .stop = usb_phy_stop,
+    .start = usb_phy_start,
+    .stop = usb_phy_stop,
     .get_dev = usb_phy_get_dev,
 };
 
+static int usb_phy_set_device(usb_dev_t *dev);
+static int usb_phy_set_host(usb_dev_t *dev);
 static void usb_phy_hal_irq_register(void);
 static void usb_phy_hal_set_gpio(usb_dev_t *dev);
 static void usb_phy_hal_reset_gpio(usb_dev_t *dev);
@@ -81,6 +83,17 @@ static int usb_phy_open(usb_num_t usb_num, usb_phy_driver_config_t *config) {
     // Register IRQ
     usb_phy_hal_irq_register();
 
+#if defined(CONFIG_SOC_FAMILY_STM32H7XX)
+    RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+    PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USB;
+    PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
+    if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
+        return OMNI_FAIL;
+    }
+
+    HAL_PWREx_EnableUSBVoltageDetector();
+#endif /* CONFIG_SOC_FAMILY_STM32H7XX */
+
     // Enable USB PHY clock
     usb_phy_hal_enable_clock(usb_num);
 
@@ -97,7 +110,17 @@ static int usb_phy_open(usb_num_t usb_num, usb_phy_driver_config_t *config) {
     NVIC_EnableIRQ(obj->dev->irq_num);
 
     // Initialize USB PHY
-    // Note: The initialization of the USB PHY is done in the cherryusb component
+#if (CONFIG_USB_USBX == 1)
+    if (obj->mode == USB_MODE_DEVICE) {
+        if (usb_phy_set_device(obj->dev) != OMNI_OK) {
+            return OMNI_FAIL;
+        }
+    } else if (obj->mode == USB_MODE_HOST) {
+        if (usb_phy_set_host(obj->dev) != OMNI_OK) {
+            return OMNI_FAIL;
+        }
+    }
+#endif /* CONFIG_USB_USBX */
 
     // Set initialized status
     obj->status.is_initialized = 1;
@@ -153,10 +176,18 @@ static int usb_phy_close(usb_num_t usb_num) {
  * @param usb_num USB PHY number
  */
 static void usb_phy_start(usb_num_t usb_num) {
-    UNUSED(usb_num);
+    omni_assert(usb_num < USB_NUM_MAX);
+
+    usb_phy_obj_t *obj = &usb_phy_obj[usb_num];
+    omni_assert_not_null(obj);
 
     // Start USB PHY
-    // Note: The start of the USB PHY is done in the cherryusb component
+#if (CONFIG_USB_OTG_FS_DEVICE == 1) || (CONFIG_USB_OTG_HS_DEVICE == 1)
+    HAL_PCD_Start(obj->dev->pcd_handle);
+#endif /* CONFIG_USB_OTG_FS_DEVICE || CONFIG_USB_OTG_HS_DEVICE */
+#if (CONFIG_USB_OTG_FS_HOST == 1) || (CONFIG_USB_OTG_HS_HOST == 1)
+    HAL_HCD_Start(obj->dev->hcd_handle);
+#endif /* CONFIG_USB_OTG_FS_HOST || CONFIG_USB_OTG_HS_HOST */
 }
 
 /**
@@ -165,10 +196,18 @@ static void usb_phy_start(usb_num_t usb_num) {
  * @param usb_num USB PHY number
  */
 static void usb_phy_stop(usb_num_t usb_num) {
-    UNUSED(usb_num);
+    omni_assert(usb_num < USB_NUM_MAX);
+
+    usb_phy_obj_t *obj = &usb_phy_obj[usb_num];
+    omni_assert_not_null(obj);
 
     // Stop USB PHY
-    // Note: The stop of the USB PHY is done in the cherryusb component
+#if (CONFIG_USB_OTG_FS_DEVICE == 1) || (CONFIG_USB_OTG_HS_DEVICE == 1)
+    HAL_PCD_Stop(obj->dev->pcd_handle);
+#endif /* CONFIG_USB_OTG_FS_DEVICE || CONFIG_USB_OTG_HS_DEVICE */
+#if (CONFIG_USB_OTG_FS_HOST == 1) || (CONFIG_USB_OTG_HS_HOST == 1)
+    HAL_HCD_Stop(obj->dev->hcd_handle);
+#endif /* CONFIG_USB_OTG_FS_HOST || CONFIG_USB_OTG_HS_HOST */
 }
 
 /**
@@ -201,6 +240,12 @@ __weak void usbd_irq_handler(void) {
  */
 __weak void usbd_fs_irq_handler(void) {
     // When the IRQ handler is needed, it could be implemented in the user file
+#if (CONFIG_USB_OTG_FS_DEVICE == 1)
+    HAL_PCD_IRQHandler(usb_phy_obj[USB_PHY_OTG_FS].dev->pcd_handle);
+#endif /* CONFIG_USB_OTG_FS_DEVICE */
+#if (CONFIG_USB_OTG_FS_HOST == 1)
+    HAL_HCD_IRQHandler(usb_phy_obj[USB_PHY_OTG_FS].dev->hcd_handle);
+#endif /* CONFIG_USB_OTG_FS_HOST */
 }
 #endif /* CONFIG_USB_OTG_FS */
 #if (CONFIG_USB_OTG_HS == 1)
@@ -209,6 +254,12 @@ __weak void usbd_fs_irq_handler(void) {
  */
 __weak void usbd_hs_irq_handler(void) {
     // When the IRQ handler is needed, it could be implemented in the user file
+#if (CONFIG_USB_OTG_HS_DEVICE == 1)
+    HAL_PCD_IRQHandler(usb_phy_obj[USB_PHY_OTG_HS].dev->pcd_handle);
+#endif /* CONFIG_USB_OTG_HS_DEVICE */
+#if (CONFIG_USB_OTG_HS_HOST == 1)
+    HAL_HCD_IRQHandler(usb_phy_obj[USB_PHY_OTG_HS].dev->hcd_handle);
+#endif /* CONFIG_USB_OTG_HS_HOST */
 }
 #endif /* CONFIG_USB_OTG_HS */
 
@@ -228,6 +279,88 @@ static void usb_phy_hal_irq_register(void) {
     irq_hal_register_handler(usb_phy_obj[USB_PHY_OTG_HS].dev->irq_num, \
                                 usbd_hs_irq_handler);
 #endif /* CONFIG_USB_OTG_HS == 1 */
+}
+
+/**
+ * @brief Set USB PHY as device
+ * 
+ * @param dev USB PHY device information
+ * 
+ * @return Operation status
+ */
+static int usb_phy_set_device(usb_dev_t *dev) {
+    PCD_HandleTypeDef *handle = (PCD_HandleTypeDef *)dev->pcd_handle;
+    omni_assert_not_null(handle);
+
+    // Set USB PHY as device
+#if (CONFIG_USB_OTG_FS_DEVICE == 1)
+    handle->Init.speed = PCD_SPEED_FULL;
+    handle->Init.dma_enable = DISABLE;
+    handle->Init.phy_itface = PCD_PHY_EMBEDDED;
+#else
+    handle->Init.speed = PCD_SPEED_HIGH;
+    handle->Init.dma_enable = USB_OTG_DMA_ENABLE;
+    handle->Init.phy_itface = USB_OTG_PHY;
+#endif /* CONFIG_USB_OTG_FS_DEVICE == 1 */
+    handle->Init.dev_endpoints = USB_OTG_ENDPOINT_NUMBER;
+    handle->Init.Sof_enable = USB_OTG_SOF_ENABLE;
+    handle->Init.low_power_enable = USB_OTG_LOW_POWER_ENABLE;
+    handle->Init.vbus_sensing_enable = USB_OTG_VBUS_SENSING_ENABLE;
+    handle->Init.lpm_enable = DISABLE;
+    handle->Init.use_dedicated_ep1 = DISABLE;
+    if (HAL_PCD_Init(handle) != HAL_OK) {
+        return OMNI_FAIL;
+    }
+
+    HAL_PCDEx_SetRxFiFo(handle, CONFIG_USB_OTG_RX_FIFO_SIZE);
+    HAL_PCDEx_SetTxFiFo(handle, 0, CONFIG_USB_OTG_TX_FIFO_0_SIZE);
+#if defined(CONFIG_USB_OTG_TX_FIFO_1_SIZE) && (CONFIG_USB_OTG_TX_FIFO_1_SIZE > 0)
+    HAL_PCDEx_SetTxFiFo(handle, 1, CONFIG_USB_OTG_TX_FIFO_1_SIZE);
+#endif /* CONFIG_USB_OTG_FS_TX_FIFO_1_SIZE > 0 */
+#if defined(CONFIG_USB_OTG_TX_FIFO_2_SIZE) && (CONFIG_USB_OTG_TX_FIFO_2_SIZE > 0)
+    HAL_PCDEx_SetTxFiFo(handle, 2, CONFIG_USB_OTG_TX_FIFO_2_SIZE);
+#endif /* CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE > 0 */
+#if defined(CONFIG_USB_OTG_TX_FIFO_3_SIZE) && (CONFIG_USB_OTG_TX_FIFO_3_SIZE > 0)
+    HAL_PCDEx_SetTxFiFo(handle, 3, CONFIG_USB_OTG_TX_FIFO_3_SIZE);
+#endif /* CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE > 0 */
+#if defined(CONFIG_USB_OTG_TX_FIFO_4_SIZE) && (CONFIG_USB_OTG_TX_FIFO_4_SIZE > 0)
+    HAL_PCDEx_SetTxFiFo(handle, 4, CONFIG_USB_OTG_TX_FIFO_4_SIZE);
+#endif /* CONFIG_USB_OTG_FS_TX_FIFO_4_SIZE > 0 */
+#if defined(CONFIG_USB_OTG_TX_FIFO_5_SIZE) && (CONFIG_USB_OTG_TX_FIFO_5_SIZE > 0)
+    HAL_PCDEx_SetTxFiFo(handle, 5, CONFIG_USB_OTG_TX_FIFO_5_SIZE);
+#endif /* CONFIG_USB_OTG_FS_TX_FIFO_5_SIZE > 0 */
+
+    return OMNI_OK;
+}
+
+/**
+ * @brief Set USB PHY as host
+ * 
+ * @param dev USB PHY device information
+ * 
+ * @return Operation status
+ */
+static int usb_phy_set_host(usb_dev_t *dev) {
+    HCD_HandleTypeDef *handle = (HCD_HandleTypeDef *)dev->hcd_handle;
+    omni_assert_not_null(handle);
+
+    // Set USB PHY as host
+#if (CONFIG_USB_OTG_FS_HOST == 1)
+    handle->Init.speed = HCD_SPEED_FULL;
+    handle->Init.phy_itface = HCD_PHY_EMBEDDED;
+#else
+    handle->Init.speed = HCD_SPEED_HIGH;
+    handle->Init.phy_itface = USB_OTG_PHY;
+#endif /* CONFIG_USB_OTG_FS_HOST == 1 */
+    handle->Init.Host_channels = CONFIG_USB_OTG_CHANNEL_NUMBER;
+    handle->Init.dma_enable = USB_OTG_DMA_ENABLE;
+    handle->Init.Sof_enable = USB_OTG_SOF_ENABLE;
+    handle->Init.vbus_sensing_enable = USB_OTG_VBUS_SENSING_ENABLE;
+    if (HAL_HCD_Init(handle) != HAL_OK) {
+        return OMNI_FAIL;
+    }
+
+    return OMNI_OK;
 }
 
 /********************* HAL functions **********************/
