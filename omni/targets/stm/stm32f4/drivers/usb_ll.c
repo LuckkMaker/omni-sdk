@@ -1,7 +1,7 @@
 /**
-  * @file    usart_ll.c
+  * @file    usb_ll.c
   * @author  LuckkMaker
-  * @brief   Low-level USART configuration
+  * @brief   Low-level USB configuration
   * @attention
   *
   * Copyright (c) 2024 LuckkMaker
