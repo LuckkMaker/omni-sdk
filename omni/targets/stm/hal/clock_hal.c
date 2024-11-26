@@ -35,6 +35,7 @@ const struct clock_driver_api clock_driver = {
  * @return Operation status
  */
 static int clock_open(void) {
+    uint32_t osc_type = 0;
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
@@ -60,7 +61,26 @@ static int clock_open(void) {
     while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
 #endif /* CONFIG_SOC_FAMILY_STM32H7XX */
 
-    RCC_OscInitStruct.OscillatorType = CONFIG_OSC_TYPE;
+#if (CONFIG_HSE_STATE != 0)
+    osc_type |= RCC_OSCILLATORTYPE_HSE;
+#endif /* CONFIG_HSE_STATE */
+#if (CONFIG_HSI_STATE != 0)
+    osc_type |= RCC_OSCILLATORTYPE_HSI;
+#endif /* CONFIG_HSI_STATE */
+#if (CONFIG_HSI48_STATE != 0)
+    osc_type |= RCC_OSCILLATORTYPE_HSI48;
+#endif /* CONFIG_HSI48_STATE */
+#if (CONFIG_LSE_STATE != 0)
+    osc_type |= RCC_OSCILLATORTYPE_LSE;
+#endif /* CONFIG_LSE_STATE */
+#if (CONFIG_LSI_STATE != 0)
+    osc_type |= RCC_OSCILLATORTYPE_LSI;
+#endif /* CONFIG_LSI_STATE */
+#if (CONFIG_CSI_STATE != 0)
+    osc_type |= RCC_OSCILLATORTYPE_CSI;
+#endif /* CONFIG_CSI_STATE */
+
+    RCC_OscInitStruct.OscillatorType = osc_type;
 #if (CONFIG_HSE_STATE == 1)
     RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
 #elif (CONFIG_HSE_STATE == 2)
@@ -132,6 +152,7 @@ static int clock_open(void) {
     RCC_ClkInitStruct.APB2CLKDivider = CONFIG_APB2_PRESC;
     RCC_ClkInitStruct.APB3CLKDivider = CONFIG_APB3_PRESC;
     RCC_ClkInitStruct.APB4CLKDivider = CONFIG_APB4_PRESC;
+
 #else
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
                                 | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
