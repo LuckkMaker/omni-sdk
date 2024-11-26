@@ -106,8 +106,8 @@ typedef usb_dev_t* (*usb_phy_get_dev_t)(usb_num_t usb_num);
 struct usb_phy_driver_api {
     usb_phy_open_t open;
     usb_phy_close_t close;
-    // usb_phy_start_t start;
-    // usb_phy_stop_t stop;
+    usb_phy_start_t start;
+    usb_phy_stop_t stop;
     usb_phy_get_dev_t get_dev;
 };
 
