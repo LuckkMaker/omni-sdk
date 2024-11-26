@@ -20,7 +20,8 @@ add_library(omni-stm32h7 INTERFACE)
 
 # Add the ll drivers
 if(NOT ${CONFIG_OMNI_DRIVER} STREQUAL "")
-
+    omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_I2C omni-stm32h7 drivers/usart_ll.c)
+    omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_USB omni-stm32h7 drivers/usb_ll.c)
 endif()
 
 # Add the startup file

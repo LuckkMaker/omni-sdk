@@ -88,7 +88,7 @@ SECTIONS
     . = ALIGN(4);
     *(.vtable)
     . = ALIGN(4);
-  } >RAM
+  } >DTCMRAM
 
   /* The program code and other data goes into FLASH */
   .text :

@@ -2,8 +2,8 @@
   * @file    omni_device_cfg.h
   * @author  LuckkMaker
   * @brief   OMNI device configuration for STM32H7 series
-  * @version 1.0.1
-  * @date    22-Oct-2024
+  * @version 1.0.2
+  * @date    24-Nov-2024
   * @attention
   *
   * Copyright (c) 2024 LuckkMaker
@@ -57,14 +57,6 @@ extern "C" {
 #define PLL_VCOSEL0         RCC_PLL1VCOWIDE
 #define PLL_VCOSEL1         RCC_PLL1VCOMEDIUM
 #define PLL_VCOSEL(num)     PLL_VCOSEL##num
-
-// OSC type
-#define OSC_TYPE_HSE        RCC_OSCILLATORTYPE_HSE
-#define OSC_TYPE_HSI        RCC_OSCILLATORTYPE_HSI
-#define OSC_TYPE_LSE        RCC_OSCILLATORTYPE_LSE
-#define OSC_TYPE_LSI        RCC_OSCILLATORTYPE_LSI
-#define OSC_TYPE_CSI        RCC_OSCILLATORTYPE_CSI
-#define OSC_TYPE_HSI48      RCC_OSCILLATORTYPE_HSI48
 
 // Get SYSCLK source
 #define SYSCLK_SRC0         RCC_SYSCLKSOURCE_HSI
@@ -216,36 +208,6 @@ extern "C" {
 //  </e>
 // </h>
 
-#if (CONFIG_HSE_STATE != 0)
-#if (CONFIG_LSE_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSE | OSC_TYPE_LSE)
-#else
-#if (CONFIG_LSI_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSE | OSC_TYPE_LSI)
-#else
-#define CONFIG_OSC_TYPE OSC_TYPE_HSE
-#endif /* CONFIG_LSI_STATE */
-#endif /* CONFIG_LSE_STATE */
-#else
-#if (CONFIG_LSE_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSI | OSC_TYPE_LSE)
-#else
-#if (CONFIG_LSI_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSI | OSC_TYPE_LSI)
-#else
-#define CONFIG_OSC_TYPE OSC_TYPE_HSI
-#endif /* CONFIG_LSI_STATE */
-#endif /* CONFIG_LSE_STATE */
-#endif /* CONFIG_HSE_STATE */
-
-#if (CONFIG_CSI_STATE != 0)
-#define CONFIG_OSC_TYPE (CONFIG_OSC_TYPE | OSC_TYPE_CSI)
-#endif /* CONFIG_CSI_STATE */
-
-#if (CONFIG_HSI48_STATE != 0)
-#define CONFIG_OSC_TYPE (CONFIG_OSC_TYPE | OSC_TYPE_HSI48)
-#endif /* CONFIG_HSI48_STATE */
-
 // <h> Clock Configuration
 //  <o> Flash Latency <0-7>
 #define CONFIG_FLASH_LATENCY FLASH_LATENCY(4)
@@ -268,6 +230,437 @@ extern "C" {
 //  <o> APB4 Prescaler <1=>1 <2=>2 <4=>4 <8=>8 <16=>16
 #define CONFIG_APB4_PRESC APB4_DIV(2)
 // </h>
+
+// <h> USB (Universal serial bus)
+//  <e> USB OTG HS2 (USB Number 1)
+//  <i> Configuration settings for OMNI Driver USB OTG FS(OTG HS2)
+#define CONFIG_USB_OTG_FS 0
+//      <q> Enable VBUS Sensing
+//      <i> Enable VBUS Sensing
+#define CONFIG_USB_OTG_FS_VBUS_SENSING 0
+//      <q> Enable SOF Output
+//      <i> Enable SOF Output
+#define CONFIG_USB_OTG_FS_SOF 0
+//      <o> USB OTG FS DM Pin <0=>PA11
+#define CONFIG_USB_OTG_FS_DM_PIN_VAL 0
+#if (CONFIG_USB_OTG_FS_DM_PIN_VAL == 0)
+#define CONFIG_USB_OTG_FS_DM_DEF 1
+#define CONFIG_USB_OTG_FS_DM_PORT GPIOA
+#define CONFIG_USB_OTG_FS_DM_PIN GPIO_PIN_11
+#define CONFIG_USB_OTG_FS_DM_AF GPIO_AF10_OTG1_FS
+#endif /* CONFIG_USB_OTG_FS_DM_PIN_VAL */
+//      <o> USB OTG FS DP Pin <0=>PA12
+#define CONFIG_USB_OTG_FS_DP_PIN_VAL 0
+#if (CONFIG_USB_OTG_FS_DP_PIN_VAL == 0)
+#define CONFIG_USB_OTG_FS_DP_DEF 1
+#define CONFIG_USB_OTG_FS_DP_PORT GPIOA
+#define CONFIG_USB_OTG_FS_DP_PIN GPIO_PIN_12
+#define CONFIG_USB_OTG_FS_DP_AF GPIO_AF10_OTG1_FS
+#endif /* CONFIG_USB_OTG_FS_DP_PIN_VAL */
+//      <o> USB OTG FS ID Pin <0=>NC <1=>PA10
+#define CONFIG_USB_OTG_FS_ID_PIN_VAL 0
+#if (CONFIG_USB_OTG_FS_ID_PIN_VAL == 0)
+#define CONFIG_USB_OTG_FS_ID_DEF 0
+#elif (CONFIG_USB_OTG_FS_ID_PIN_VAL == 1)
+#define CONFIG_USB_OTG_FS_ID_DEF 1
+#define CONFIG_USB_OTG_FS_ID_PORT GPIOA
+#define CONFIG_USB_OTG_FS_ID_PIN GPIO_PIN_10
+#define CONFIG_USB_OTG_FS_ID_AF GPIO_AF10_OTG1_FS
+#endif /* CONFIG_USB_OTG_FS_ID_PIN_VAL */
+//      <o> USB OTG FS VBUS Pin <0=>NC <1=>PA9
+#define CONFIG_USB_OTG_FS_VBUS_PIN_VAL 0
+#if (CONFIG_USB_OTG_FS_VBUS_PIN_VAL == 0)
+#define CONFIG_USB_OTG_FS_VBUS_DEF 0
+#elif (CONFIG_USB_OTG_FS_VBUS_PIN_VAL == 1)
+#define CONFIG_USB_OTG_FS_VBUS_DEF 1
+#define CONFIG_USB_OTG_FS_VBUS_PORT GPIOA
+#define CONFIG_USB_OTG_FS_VBUS_PIN GPIO_PIN_9
+#endif /* CONFIG_USB_OTG_FS_VBUS_PIN_VAL */
+//      <o> USB OTG FS SOF Output Pin <0=>NC <1=>PA8
+#define CONFIG_USB_OTG_FS_SOF_PIN_VAL 0
+#if (CONFIG_USB_OTG_FS_SOF_PIN_VAL == 0)
+#define CONFIG_USB_OTG_FS_SOF_DEF 0
+#elif (CONFIG_USB_OTG_FS_SOF_PIN_VAL == 1)
+#define CONFIG_USB_OTG_FS_SOF_DEF 1
+#define CONFIG_USB_OTG_FS_SOF_PORT GPIOA
+#define CONFIG_USB_OTG_FS_SOF_PIN GPIO_PIN_8
+#define CONFIG_USB_OTG_FS_SOF_AF GPIO_AF10_OTG1_FS
+#endif /* CONFIG_USB_OTG_FS_SOF_PIN_VAL */
+
+//      <e> Device
+//      <i> Enable Device
+#define CONFIG_USB_OTG_FS_DEVICE 0
+//          <q> Enable Low Power
+//          <i> Enable Low Power
+#define CONFIG_USB_OTG_FS_LOW_POWER 0
+//          <o> Endpoint Number <9-9>
+//          <i> Maximum number of endpoints
+#define CONFIG_USB_OTG_FS_ENDPOINT_NUMBER 9
+//          <h> FIFO Configuration
+//              <o> RX FIFO Size <0x10-0x400:0x10>
+//              <i> Set size of RX FIFO
+#define CONFIG_USB_OTG_FS_RX_FIFO_SIZE 0x80
+//              <o> TX FIFO 0 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 0
+#define CONFIG_USB_OTG_FS_TX_FIFO_0_SIZE 0x40
+//              <o> TX FIFO 1 Size <0x00-0x400:0x10>
+//              <i> Set size of TX FIFO 1
+#define CONFIG_USB_OTG_FS_TX_FIFO_1_SIZE 0x10
+//              <o> TX FIFO 2 Size <0x00-0x400:0x10>
+//              <i> Set size of TX FIFO 2
+#define CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE 0x00
+//              <o> TX FIFO 3 Size <0x00-0x400:0x10>
+//              <i> Set size of TX FIFO 3
+#define CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE 0x00
+//          </h>
+//      </e>
+
+//      <e> Host
+//      <i> Enable Host
+#define CONFIG_USB_OTG_FS_HOST 0
+//      <o> Channel Number <16-16>
+//      <i> Maximum number of channels
+#define CONFIG_USB_OTG_FS_CHANNEL_NUMBER 16
+//          <e> VBUS Power Pin
+//          <i> Configure Pin to drive external VBUS switch
+//          <i> GPIO Port (x = A..H, y = 0..15) or (x = I, y = 0..11)
+//              <o1> Active State <0=>Low <1=>High
+//              <i> Select active state
+//              <o2> Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD
+//                        <4=>GPIOE <5=>GPIOF <6=>GPIOG <7=>GPIOH <8=>GPIOI
+//              <i> Select GPIO port
+//              <o3> Pin <0-15>
+//              <i> Select GPIO pin
+//          </e>
+#define CONFIG_USB_OTG_FS_VBUS_POWER 0
+#define CONFIG_USB_OTG_FS_VBUS_POWER_ACTIVE 0
+#define CONFIG_USB_OTG_FS_VBUS_POWER_PORT GPIO_PORT(0)
+#define CONFIG_USB_OTG_FS_VBUS_POWER_PIN 0
+
+//          <e> Overcurrent Detection Pin
+//          <i> Configure Pin to detect overcurrent condition
+//          <i> GPIO Port (x = A..H, y = 0..15) or (x = I, y = 0..11)
+//              <o1> Active State <0=>Low <1=>High
+//              <i> Select active state
+//              <o2> Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD
+//                        <4=>GPIOE <5=>GPIOF <6=>GPIOG <7=>GPIOH <8=>GPIOI
+//              <i> Select GPIO port
+//              <o3> Pin <0-15>
+//              <i> Select GPIO pin
+//          </e>
+#define CONFIG_USB_OTG_FS_OVERCURRENT 0
+#define CONFIG_USB_OTG_FS_OVERCURRENT_ACTIVE 0
+#define CONFIG_USB_OTG_FS_OVERCURRENT_PORT GPIO_PORT(0)
+#define CONFIG_USB_OTG_FS_OVERCURRENT_PIN 0
+//      </e>
+// </e>
+
+// <e> USB OTG HS1 (USB Number 2)
+// <i> Configuration settings for OMNI Driver USB OTG HS(OTG HS1)
+#define CONFIG_USB_OTG_HS 0
+//      <o> PHY <0=>On-Chip Full-Speed PHY <1=>External ULPI PHY
+#define CONFIG_USB_OTG_HS_PHY 0
+//      <q> DMA
+//      <i> Use dedicated DMA for transfers
+//      <i> If DMA is used all transfers data buffers must be 32-bit aligned
+#define CONFIG_USB_OTG_HS_DMA 0
+//      <q> Enable VBUS Sensing
+//      <i> Enable VBUS Sensing
+#define CONFIG_USB_OTG_HS_VBUS_SENSING 0
+//      <q> Enable SOF Output
+//      <i> Enable SOF Output
+#define CONFIG_USB_OTG_HS_SOF 0
+//      <o> USB OTG HS DM Pin <0=>PB14
+#define CONFIG_USB_OTG_HS_DM_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_DM_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_DM_DEF 1
+#define CONFIG_USB_OTG_HS_DM_PORT GPIOB
+#define CONFIG_USB_OTG_HS_DM_PIN GPIO_PIN_14
+#define CONFIG_USB_OTG_HS_DM_AF GPIO_AF12_OTG2_FS
+#endif /* CONFIG_USB_OTG_HS_DM_PIN_VAL */
+//      <o> USB OTG HS DP Pin <0=>PB15
+#define CONFIG_USB_OTG_HS_DP_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_DP_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_DP_DEF 1
+#define CONFIG_USB_OTG_HS_DP_PORT GPIOB
+#define CONFIG_USB_OTG_HS_DP_PIN GPIO_PIN_15
+#define CONFIG_USB_OTG_HS_DP_AF GPIO_AF12_OTG2_FS
+#endif /* CONFIG_USB_OTG_HS_DP_PIN_VAL */
+//      <o> USB OTG HS ID Pin <0=>NC <1=>PB12
+#define CONFIG_USB_OTG_HS_ID_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ID_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ID_DEF 0
+#elif (CONFIG_USB_OTG_HS_ID_PIN_VAL == 1)
+#define CONFIG_USB_OTG_HS_ID_DEF 1
+#define CONFIG_USB_OTG_HS_ID_PORT GPIOB
+#define CONFIG_USB_OTG_HS_ID_PIN GPIO_PIN_12
+#define CONFIG_USB_OTG_HS_ID_AF GPIO_AF12_OTG2_FS
+#endif /* CONFIG_USB_OTG_HS_ID_PIN_VAL */
+//      <o> USB OTG HS VBUS Pin <0=>NC <1=>PB13
+#define CONFIG_USB_OTG_HS_VBUS_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_VBUS_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_VBUS_DEF 0
+#elif (CONFIG_USB_OTG_HS_VBUS_PIN_VAL == 1)
+#define CONFIG_USB_OTG_HS_VBUS_DEF 1
+#define CONFIG_USB_OTG_HS_VBUS_PORT GPIOB
+#define CONFIG_USB_OTG_HS_VBUS_PIN GPIO_PIN_13
+#endif /* CONFIG_USB_OTG_HS_VBUS_PIN_VAL */
+//      <o> USB OTG HS SOF Output Pin <0=>NC <1=>PA4
+#define CONFIG_USB_OTG_HS_SOF_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_SOF_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_SOF_DEF 0
+#elif (CONFIG_USB_OTG_HS_SOF_PIN_VAL == 1)
+#define CONFIG_USB_OTG_HS_SOF_DEF 1
+#define CONFIG_USB_OTG_HS_SOF_PORT GPIOA
+#define CONFIG_USB_OTG_HS_SOF_PIN GPIO_PIN_4
+#define CONFIG_USB_OTG_HS_SOF_AF GPIO_AF12_OTG2_FS
+#endif /* CONFIG_USB_OTG_HS_SOF_PIN_VAL */
+
+// <h> External ULPI Pins
+//      <o> ULPI CK Pin <0=>PA5
+#define CONFIG_USB_OTG_HS_ULPI_CK_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_CK_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_CK_PORT GPIOA
+#define CONFIG_USB_OTG_HS_ULPI_CK_PIN GPIO_PIN_5
+#define CONFIG_USB_OTG_HS_ULPI_CK_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_CK_PIN_VAL */
+//      <o> ULPI STP Pin <0=>PC0
+#define CONFIG_USB_OTG_HS_ULPI_STP_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_STP_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_STP_PORT GPIOC
+#define CONFIG_USB_OTG_HS_ULPI_STP_PIN GPIO_PIN_0
+#define CONFIG_USB_OTG_HS_ULPI_STP_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_STP_PIN_VAL */
+//      <o> ULPI DIR Pin <0=>PC2 <1=>PI11
+#define CONFIG_USB_OTG_HS_ULPI_DIR_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_DIR_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_DIR_PORT GPIOC
+#define CONFIG_USB_OTG_HS_ULPI_DIR_PIN GPIO_PIN_2
+#define CONFIG_USB_OTG_HS_ULPI_DIR_AF GPIO_AF10_OTG2_HS
+#elif (CONFIG_USB_OTG_HS_ULPI_DIR_PIN_VAL == 1)
+#define CONFIG_USB_OTG_HS_ULPI_DIR_PORT GPIOI
+#define CONFIG_USB_OTG_HS_ULPI_DIR_PIN GPIO_PIN_11
+#define CONFIG_USB_OTG_HS_ULPI_DIR_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_DIR_PIN_VAL */
+//      <o> ULPI NXT Pin <0=>PC3 <1=>PH4
+#define CONFIG_USB_OTG_HS_ULPI_NXT_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_NXT_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_NXT_PORT GPIOC
+#define CONFIG_USB_OTG_HS_ULPI_NXT_PIN GPIO_PIN_3
+#define CONFIG_USB_OTG_HS_ULPI_NXT_AF GPIO_AF10_OTG2_HS
+#elif (CONFIG_USB_OTG_HS_ULPI_NXT_PIN_VAL == 1)
+#define CONFIG_USB_OTG_HS_ULPI_NXT_PORT GPIOH
+#define CONFIG_USB_OTG_HS_ULPI_NXT_PIN GPIO_PIN_4
+#define CONFIG_USB_OTG_HS_ULPI_NXT_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_NXT_PIN_VAL */
+//      <o> ULPI D0 Pin <0=>PA3
+#define CONFIG_USB_OTG_HS_ULPI_D0_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_D0_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_D0_PORT GPIOA
+#define CONFIG_USB_OTG_HS_ULPI_D0_PIN GPIO_PIN_3
+#define CONFIG_USB_OTG_HS_ULPI_D0_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_D0_PIN_VAL */
+//      <o> ULPI D1 Pin <0=>PB0
+#define CONFIG_USB_OTG_HS_ULPI_D1_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_D1_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_D1_PORT GPIOB
+#define CONFIG_USB_OTG_HS_ULPI_D1_PIN GPIO_PIN_0
+#define CONFIG_USB_OTG_HS_ULPI_D1_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_D1_PIN_VAL */
+//      <o> ULPI D2 Pin <0=>PB1
+#define CONFIG_USB_OTG_HS_ULPI_D2_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_D2_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_D2_PORT GPIOB
+#define CONFIG_USB_OTG_HS_ULPI_D2_PIN GPIO_PIN_1
+#define CONFIG_USB_OTG_HS_ULPI_D2_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_D2_PIN_VAL */
+//      <o> ULPI D3 Pin <0=>PB10
+#define CONFIG_USB_OTG_HS_ULPI_D3_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_D3_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_D3_PORT GPIOB
+#define CONFIG_USB_OTG_HS_ULPI_D3_PIN GPIO_PIN_10
+#define CONFIG_USB_OTG_HS_ULPI_D3_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_D3_PIN_VAL */
+//      <o> ULPI D4 Pin <0=>PB11
+#define CONFIG_USB_OTG_HS_ULPI_D4_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_D4_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_D4_PORT GPIOB
+#define CONFIG_USB_OTG_HS_ULPI_D4_PIN GPIO_PIN_11
+#define CONFIG_USB_OTG_HS_ULPI_D4_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_D4_PIN_VAL */
+//      <o> ULPI D5 Pin <0=>PB12
+#define CONFIG_USB_OTG_HS_ULPI_D5_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_D5_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_D5_PORT GPIOB
+#define CONFIG_USB_OTG_HS_ULPI_D5_PIN GPIO_PIN_12
+#define CONFIG_USB_OTG_HS_ULPI_D5_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_D5_PIN_VAL */
+//      <o> ULPI D6 Pin <0=>PB13
+#define CONFIG_USB_OTG_HS_ULPI_D6_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_D6_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_D6_PORT GPIOB
+#define CONFIG_USB_OTG_HS_ULPI_D6_PIN GPIO_PIN_13
+#define CONFIG_USB_OTG_HS_ULPI_D6_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_D6_PIN_VAL */
+//      <o> ULPI D7 Pin <0=>PB5
+#define CONFIG_USB_OTG_HS_ULPI_D7_PIN_VAL 0
+#if (CONFIG_USB_OTG_HS_ULPI_D7_PIN_VAL == 0)
+#define CONFIG_USB_OTG_HS_ULPI_D7_PORT GPIOB
+#define CONFIG_USB_OTG_HS_ULPI_D7_PIN GPIO_PIN_5
+#define CONFIG_USB_OTG_HS_ULPI_D7_AF GPIO_AF10_OTG2_HS
+#endif /* CONFIG_USB_OTG_HS_ULPI_D7_PIN_VAL */
+// </h>
+
+//      <e> Device
+//      <i> Enable Device
+#define CONFIG_USB_OTG_HS_DEVICE 0
+//          <q> Enable Low Power
+//          <i> Enable Low Power
+#define CONFIG_USB_OTG_HS_LOW_POWER 0
+//          <o> Endpoint Number <9-9>
+//          <i> Maximum number of endpoints
+#define CONFIG_USB_OTG_HS_ENDPOINT_NUMBER 9
+//          <h> FIFO Configuration
+//              <o> RX FIFO Size <0x10-0x400:0x10>
+//              <i> Set size of RX FIFO
+#define CONFIG_USB_OTG_HS_RX_FIFO_SIZE 0x200
+//              <o> TX FIFO 0 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 0
+#define CONFIG_USB_OTG_HS_TX_FIFO_0_SIZE 0x80
+//              <o> TX FIFO 1 Size <0x00-0x400:0x10>
+//              <i> Set size of TX FIFO 1
+#define CONFIG_USB_OTG_HS_TX_FIFO_1_SIZE 0x10
+//              <o> TX FIFO 2 Size <0x00-0x400:0x10>
+//              <i> Set size of TX FIFO 2
+#define CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE 0x00
+//              <o> TX FIFO 3 Size <0x00-0x400:0x10>
+//              <i> Set size of TX FIFO 3
+#define CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE 0x00
+//              <o> TX FIFO 4 Size <0x00-0x400:0x10>
+//              <i> Set size of TX FIFO 4
+#define CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE 0x00
+//              <o> TX FIFO 5 Size <0x00-0x400:0x10>
+//              <i> Set size of TX FIFO 5
+#define CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE 0x00
+//          </h>
+//      </e>
+
+//      <e> Host
+//      <i> Enable Host
+#define CONFIG_USB_OTG_HS_HOST 0
+//      <o> Channel Number <16-16>
+//      <i> Maximum number of channels
+#define CONFIG_USB_OTG_HS_CHANNEL_NUMBER 16
+//          <e> VBUS Power Pin
+//          <i> Configure Pin to drive external VBUS switch
+//          <i> GPIO Port (x = A..H, y = 0..15) or (x = I, y = 0..11)
+//              <o1> Active State <0=>Low <1=>High
+//              <i> Select active state
+//              <o2> Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD
+//                        <4=>GPIOE <5=>GPIOF <6=>GPIOG <7=>GPIOH <8=>GPIOI
+//              <i> Select GPIO port
+//              <o3> Pin <0-15>
+//              <i> Select GPIO pin
+//          </e>
+#define CONFIG_USB_OTG_HS_VBUS_POWER 0
+#define CONFIG_USB_OTG_HS_VBUS_POWER_ACTIVE 0
+#define CONFIG_USB_OTG_HS_VBUS_POWER_PORT GPIO_PORT(0)
+#define CONFIG_USB_OTG_HS_VBUS_POWER_PIN 0
+
+//          <e> Overcurrent Detection Pin
+//          <i> Configure Pin to detect overcurrent condition
+//          <i> GPIO Port (x = A..H, y = 0..15) or (x = I, y = 0..11)
+//              <o1> Active State <0=>Low <1=>High
+//              <i> Select active state
+//              <o2> Port <0=>GPIOA <1=>GPIOB <2=>GPIOC <3=>GPIOD
+//                        <4=>GPIOE <5=>GPIOF <6=>GPIOG <7=>GPIOH <8=>GPIOI
+//              <i> Select GPIO port
+//              <o3> Pin <0-15>
+//              <i> Select GPIO pin
+//          </e>
+#define CONFIG_USB_OTG_HS_OVERCURRENT 0
+#define CONFIG_USB_OTG_HS_OVERCURRENT_ACTIVE 0
+#define CONFIG_USB_OTG_HS_OVERCURRENT_PORT GPIO_PORT(0)
+#define CONFIG_USB_OTG_HS_OVERCURRENT_PIN 0
+//      </e>
+// </e>
+// </h>
+
+#if (CONFIG_USB_OTG_HS == 1)
+#if (CONFIG_USB_OTG_HS_PHY == 1)
+#define USB_OTG_PHY                   PCD_PHY_ULPI
+#else
+#define USB_OTG_PHY                   PCD_PHY_EMBEDDED
+#endif /* CONFIG_USB_OTG_HS_PHY == 1 */
+#if (CONFIG_USB_OTG_HS_VBUS_SENSING == 1)
+#define USB_OTG_VBUS_SENSING_ENABLE   ENABLE
+#else
+#define USB_OTG_VBUS_SENSING_ENABLE   DISABLE
+#endif /* CONFIG_USB_OTG_HS_VBUS_SENSING == 1 */
+#if (CONFIG_USB_OTG_HS_SOF == 1)
+#define USB_OTG_SOF_ENABLE            ENABLE
+#else
+#define USB_OTG_SOF_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS_SOF == 1 */
+#if (CONFIG_USB_OTG_HS_DMA == 1)
+#define USB_OTG_DMA_ENABLE            ENABLE
+#else
+#define USB_OTG_DMA_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS_DMA == 1 */
+#else
+#define USB_OTG_PHY                   PCD_PHY_EMBEDDED
+#if (CONFIG_USB_OTG_FS_VBUS_SENSING == 1)
+#define USB_OTG_VBUS_SENSING_ENABLE   ENABLE
+#else
+#define USB_OTG_VBUS_SENSING_ENABLE   DISABLE
+#endif /* CONFIG_USB_OTG_FS_VBUS_SENSING == 1 */
+#if (CONFIG_USB_OTG_FS_SOF == 1)
+#define USB_OTG_SOF_ENABLE            ENABLE
+#else
+#define USB_OTG_SOF_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_FS_SOF == 1 */
+#define USB_OTG_DMA_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS == 1 */
+
+#if (CONFIG_USB_OTG_HS_DEVICE == 1)
+// PCD configuration
+#define USB_OTG_ENDPOINT_NUMBER     CONFIG_USB_OTG_HS_ENDPOINT_NUMBER
+#if (CONFIG_USB_OTG_HS_LOW_POWER == 1)
+#define USB_OTG_LOW_POWER_ENABLE    ENABLE
+#else
+#define USB_OTG_LOW_POWER_ENABLE    DISABLE
+#endif /* CONFIG_USB_OTG_HS_LOW_POWER == 1 */
+
+// FIFO sizes
+#define CONFIG_USB_OTG_RX_FIFO_SIZE CONFIG_USB_OTG_HS_RX_FIFO_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_0_SIZE CONFIG_USB_OTG_HS_TX_FIFO_0_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_1_SIZE CONFIG_USB_OTG_HS_TX_FIFO_1_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_2_SIZE CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_3_SIZE CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_4_SIZE CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_5_SIZE CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE
+#else
+// PCD configuration
+#define USB_OTG_ENDPOINT_NUMBER     CONFIG_USB_OTG_FS_ENDPOINT_NUMBER
+#if (CONFIG_USB_OTG_FS_LOW_POWER == 1)
+#define USB_OTG_LOW_POWER_ENABLE    ENABLE
+#else
+#define USB_OTG_LOW_POWER_ENABLE    DISABLE
+#endif /* CONFIG_USB_OTG_FS_LOW_POWER == 1 */
+
+// FIFO sizes
+#define CONFIG_USB_OTG_RX_FIFO_SIZE CONFIG_USB_OTG_FS_RX_FIFO_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_0_SIZE CONFIG_USB_OTG_FS_TX_FIFO_0_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_1_SIZE CONFIG_USB_OTG_FS_TX_FIFO_1_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_2_SIZE CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_3_SIZE CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE
+#endif /* CONFIG_USB_OTG_HS_DEVICE == 1 */
+
+#if (CONFIG_USB_OTG_HS_HOST == 1)
+#define CONFIG_USB_OTG_CHANNEL_NUMBER CONFIG_USB_OTG_HS_CHANNEL_NUMBER
+#else
+#define CONFIG_USB_OTG_CHANNEL_NUMBER CONFIG_USB_OTG_FS_CHANNEL_NUMBER
+#endif /* CONFIG_USB_OTG_HS_HOST == 1 */
 
 //-------- <<< end of configuration section >>> --------------------------------
 
