@@ -9,6 +9,12 @@ The USART echo bot example provides a simple interface for sending and receiving
 
 ## How to use example
 ### Kconfig configuration
+If using the 'ninja' generator, you can use the following command to configure the project:
+```bash
+ninja -C build menuconfig
+```
+
+If using the 'MinGW Makefiles' generator, you can use the following command to configure the project:
 ```bash
 cd build
 make menuconfig

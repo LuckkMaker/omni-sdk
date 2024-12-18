@@ -14,6 +14,12 @@ The template example provides a simple starting point for creating new examples.
 ### Run stm32cubemx project to generate driver files
 
 ### Kconfig configuration
+If using the 'ninja' generator, you can use the following command to configure the project:
+```bash
+ninja -C build menuconfig
+```
+
+If using the 'MinGW Makefiles' generator, you can use the following command to configure the project:
 ```bash
 cd build
 make menuconfig

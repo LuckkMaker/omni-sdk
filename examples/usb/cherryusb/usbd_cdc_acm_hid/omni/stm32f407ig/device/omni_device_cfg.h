@@ -2,8 +2,8 @@
   * @file    omni_device_cfg.h
   * @author  LuckkMaker
   * @brief   OMNI device configuration for STM32F4 series
-  * @version 1.0.4
-  * @date    23-Oct-2024
+  * @version 1.0.5
+  * @date    11-Nov-2024
   * @attention
   *
   * Copyright (c) 2024 LuckkMaker
@@ -221,7 +221,7 @@ extern "C" {
 //  <i> Configuration settings for OMNI Driver USART
 #define CONFIG_USART_NUM_1 1
 //      <o> USART1 TX Pin <0=>NC <1=>PA9 <2=>PB6
-#define CONFIG_USART1_TX_PIN_VAL 1
+#define CONFIG_USART1_TX_PIN_VAL 0
 #if (CONFIG_USART1_TX_PIN_VAL == 0)
 #define CONFIG_USART1_TX_DEF 0
 #elif (CONFIG_USART1_TX_PIN_VAL == 1)
@@ -236,7 +236,7 @@ extern "C" {
 #define CONFIG_USART1_TX_AF GPIO_AF7_USART1
 #endif /* CONFIG_USART1_TX_PIN_VAL */
 //      <o> USART1 RX Pin <0=>NC <1=>PA10 <2=>PB7
-#define CONFIG_USART1_RX_PIN_VAL 1
+#define CONFIG_USART1_RX_PIN_VAL 0
 #if (CONFIG_USART1_RX_PIN_VAL == 0)
 #define CONFIG_USART1_RX_DEF 0
 #elif (CONFIG_USART1_RX_PIN_VAL == 1)
@@ -263,7 +263,7 @@ extern "C" {
 //          <o5> IRQ priority <0-15>
 //          <i> Select DMA IRQ priority
 //      </e>
-#define CONFIG_USART1_TX_DMA 1
+#define CONFIG_USART1_TX_DMA 0
 #define CONFIG_USART1_TX_DMA_NUMBER 2
 #define CONFIG_USART1_TX_DMA_INS DMA_INS(CONFIG_USART1_TX_DMA_NUMBER)
 #define CONFIG_USART1_TX_DMA_STREAM_NUM 7
@@ -285,7 +285,7 @@ extern "C" {
 //          <o5> IRQ priority <0-15>
 //          <i> Select DMA IRQ priority
 //      </e>
-#define CONFIG_USART1_RX_DMA 1
+#define CONFIG_USART1_RX_DMA 0
 #define CONFIG_USART1_RX_DMA_NUMBER 2
 #define CONFIG_USART1_RX_DMA_INS DMA_INS(CONFIG_USART1_RX_DMA_NUMBER)
 #define CONFIG_USART1_RX_DMA_STREAM_NUM 2
@@ -1023,10 +1023,33 @@ extern "C" {
 
 //      <e> Device
 //      <i> Enable Device
-#define CONFIG_USB_OTG_FS_DEVICE 0
+#define CONFIG_USB_OTG_FS_DEVICE 1
 //          <q> Enable VBUS Sensing
 //          <i> Enable VBUS Sensing
 #define CONFIG_USB_OTG_FS_VBUS_SENSING 0
+//          <q> Enable SOF Output
+//          <i> Enable SOF Output
+#define CONFIG_USB_OTG_FS_SOF
+//          <q> Enable Low Power
+//          <i> Enable Low Power
+#define CONFIG_USB_OTG_FS_LOW_POWER 0
+//          <h> FIFO Configuration
+//              <o> RX FIFO Size <0x10-0x400:0x10>
+//              <i> Set size of RX FIFO
+#define CONFIG_USB_OTG_FS_RX_FIFO_SIZE 0x80
+//              <o> TX FIFO 0 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 0
+#define CONFIG_USB_OTG_FS_TX_FIFO_0_SIZE 0x40
+//              <o> TX FIFO 1 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 1
+#define CONFIG_USB_OTG_FS_TX_FIFO_1_SIZE 0x10
+//              <o> TX FIFO 2 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 2
+#define CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE 0x10
+//              <o> TX FIFO 3 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 3
+#define CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE 0x10
+//          </h>
 //      </e>
 
 //      <e> Host
@@ -1223,6 +1246,35 @@ extern "C" {
 //          <q> Enable VBUS Sensing
 //          <i> Enable VBUS Sensing
 #define CONFIG_USB_OTG_HS_VBUS_SENSING 0
+//          <q> Enable SOF Output
+//          <i> Enable SOF Output
+#define CONFIG_USB_OTG_HS_SOF
+//          <q> Enable Low Power
+//          <i> Enable Low Power
+#define CONFIG_USB_OTG_HS_LOW_POWER 0
+//          <h> FIFO Configuration
+//              <o> RX FIFO Size <0x10-0x400:0x10>
+//              <i> Set size of RX FIFO
+#define CONFIG_USB_OTG_HS_RX_FIFO_SIZE 0x200
+//              <o> TX FIFO 0 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 0
+#define CONFIG_USB_OTG_HS_TX_FIFO_0_SIZE 0x80
+//              <o> TX FIFO 1 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 1
+#define CONFIG_USB_OTG_HS_TX_FIFO_1_SIZE 0x10
+//              <o> TX FIFO 2 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 2
+#define CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE 0x10
+//              <o> TX FIFO 3 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 3
+#define CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE 0x10
+//              <o> TX FIFO 4 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 4
+#define CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE 0x10
+//              <o> TX FIFO 5 Size <0x10-0x400:0x10>
+//              <i> Set size of TX FIFO 5
+#define CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE 0x10
+//          </h>
 //      </e>
 
 //      <e> Host

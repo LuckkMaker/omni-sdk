@@ -110,7 +110,7 @@ static uint8_t u8x8_byte_hw_i2c(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void
                 .event_cb = i2c1_event_callback,
             };
 
-            i2c_driver.open(I2C_NUM_1, &i2c1_config);
+            i2c_driver.init(I2C_NUM_1, &i2c1_config);
             break;
         case U8X8_MSG_BYTE_SEND:
             data = (uint8_t *)arg_ptr;

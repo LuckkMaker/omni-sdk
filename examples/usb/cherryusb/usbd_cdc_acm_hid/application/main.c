@@ -58,7 +58,7 @@ void setup(void) {
         .level = GPIO_LEVEL_LOW,
     };
 
-    gpio_driver.open(LED_PIN, &gpio1_config);
+    gpio_driver.init(LED_PIN, &gpio1_config);
 
     usart_driver_config_t uart1_config = {
         .mode = USART_MODE_UART,
@@ -70,7 +70,7 @@ void setup(void) {
         .event_cb = uart1_event_callback,
     };
 
-    usart_driver.open(USART_NUM_1, &uart1_config);
+    usart_driver.init(USART_NUM_1, &uart1_config);
 
     static struct usbd_itf cdc_itf0;
     cdc_itf0.type = USB_ITF_TYPE_CDC;
@@ -101,7 +101,7 @@ void setup(void) {
         .itf[2] = &hid_itf,
         .usbd_event_callback = usbd_event_handler,
     };
-    usb_device.open(USB_NUM_1, &usbd1_config);
+    usb_device.init(USB_NUM_1, &usbd1_config);
 }
 
 /**
@@ -120,7 +120,7 @@ static void uart1_event_callback(uint32_t event) {
  */
 int __io_putchar(int ch) {
     /* send a byte of data to the serial port */
-    usart_driver.poll_write(USART_NUM_1, (uint8_t*)&ch, 1, 1000);
+    usart_driver.poll_send(USART_NUM_1, (uint8_t*)&ch, 1, 1000);
 
     return ch;
 }

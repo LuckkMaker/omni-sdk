@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 #include <omni.h>
 #include "tx_api.h"
+#include "ux_device_cdc_acm.h"
 
 #define LED_PIN GET_PIN(E, 6)
 
@@ -73,7 +74,14 @@ void setup(void) {
         .level = GPIO_LEVEL_LOW,
     };
 
-    gpio_driver.open(LED_PIN, &gpio1_config);
+    gpio_driver.init(LED_PIN, &gpio1_config);
+
+    usb_phy_driver_config_t usb_phy_config = {
+        .mode = USB_MODE_DEVICE,
+        .event_cb = NULL,
+    };
+
+    usb_phy_driver.init(USB_NUM_1, &usb_phy_config);
 }
 
 /**
@@ -103,6 +111,9 @@ void tx_application_define(void* first_unused_memory) {
                      LED_THREAD_PRIORITY, \
                      TX_NO_TIME_SLICE, \
                      TX_AUTO_START);
+
+    // Create the USBX cdc acm thread
+    ux_device_cdc_acm_init();
 }
 
 static void start_thread_entry(ULONG parameter) {

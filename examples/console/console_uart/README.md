@@ -10,10 +10,23 @@ The UART console example provides a simple interface for sending and receiving d
 
 ## How to use example
 ### Kconfig configuration
+If using the 'ninja' generator, you can use the following command to configure the project:
+```bash
+ninja -C build menuconfig
+```
+
+If using the 'MinGW Makefiles' generator, you can use the following command to configure the project:
+If using the 'ninja' generator, you can use the following command to configure the project:
+```bash
+ninja -C build menuconfig
+```
+
+If using the 'MinGW Makefiles' generator, you can use the following command to configure the project:
 ```bash
 cd build
 make menuconfig
 ```
+
 ### Build and Flash
 ```bash
 mkdir build

@@ -73,7 +73,7 @@ void setup(void) {
         .level = GPIO_LEVEL_LOW,
     };
 
-    gpio_driver.open(LED_PIN, &gpio1_config);
+    gpio_driver.init(LED_PIN, &gpio1_config);
 }
 
 /**

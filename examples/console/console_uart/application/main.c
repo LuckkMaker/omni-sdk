@@ -141,7 +141,7 @@ static void led_thread(void *argument) {
     /* Get the current tick */
     tick = osKernelGetTickCount();
 
-    gpio_driver.open(LED_PIN, &gpio1_config);
+    gpio_driver.init(LED_PIN, &gpio1_config);
 
     while (1) {
         gpio_driver.toggle(LED_PIN);
@@ -170,9 +170,9 @@ static void console_thread(void *argument) {
         .event_cb = uart1_event_callback,
     };
 
-    usart_driver.open(USART_NUM_1, &uart1_config);
+    usart_driver.init(USART_NUM_1, &uart1_config);
 
-    usart_driver.read(USART_NUM_1, &uart_rx_data, 1);
+    usart_driver.receive(USART_NUM_1, &uart_rx_data, 1);
 
     // Create console mutex
     // Mutex need to be created at shell thread
@@ -212,7 +212,7 @@ static void uart1_event_callback(uint32_t event) {
     if (event & USART_EVENT_RECEIVE_COMPLETE) {
         // shellHandler(&console_shell, uart_rx_data);
         osMessageQueuePut(uart1_rx_queue_id, &uart_rx_data, 0, 0);
-        usart_driver.read(USART_NUM_1, &uart_rx_data, 1);
+        usart_driver.receive(USART_NUM_1, &uart_rx_data, 1);
     }
 
     if (event & USART_EVENT_SEND_COMPLETE) {

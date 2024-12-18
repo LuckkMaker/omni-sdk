@@ -113,8 +113,8 @@ static void led_thread(void *argument) {
     /* Get the current tick */
     tick = osKernelGetTickCount();
 
-    gpio_driver.open(LED1_PIN, &gpio1_config);
-    gpio_driver.open(LED2_PIN, &gpio1_config);
+    gpio_driver.init(LED1_PIN, &gpio1_config);
+    gpio_driver.init(LED2_PIN, &gpio1_config);
 
     while (1) {
         gpio_driver.toggle(LED1_PIN);

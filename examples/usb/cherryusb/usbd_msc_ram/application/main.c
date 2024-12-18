@@ -56,7 +56,7 @@ void setup(void) {
         .level = GPIO_LEVEL_LOW,
     };
 
-    gpio_driver.open(LED_PIN, &gpio1_config);
+    gpio_driver.init(LED_PIN, &gpio1_config);
 
     // Initialize CherryUSB
     static struct usbd_itf msc_itf;
@@ -72,5 +72,5 @@ void setup(void) {
         .itf[0] = &msc_itf,
         .usbd_event_callback = usbd_event_handler,
     };
-    usb_device.open(USB_NUM_1, &usbd1_config);
+    usb_device.init(USB_NUM_1, &usbd1_config);
 }

@@ -58,7 +58,7 @@ short console_shell_write(char *data, unsigned short len) {
     // while (uart_tx_busy) {
     //     osDelay(1);
     // }
-    usart_driver.poll_write(USART_NUM_1, (uint8_t *)data, len, 0x1FF);
+    usart_driver.poll_send(USART_NUM_1, (uint8_t *)data, len, 0x1FF);
 
     return len;
 }
@@ -70,7 +70,7 @@ short console_shell_write(char *data, unsigned short len) {
   * @retval read character
   */
 short console_shell_read(char *data, unsigned short len) {
-    // if (usart_driver.read(USART_NUM_1, (uint8_t *)data, len) != 0) {
+    // if (usart_driver.receive(USART_NUM_1, (uint8_t *)data, len) != 0) {
     // // if (uart_driver.poll_read(USART_NUM_1, (uint8_t *)data, len, 0x1FF) != 0) {
     //     return 0;
     // } else {

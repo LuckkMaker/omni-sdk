@@ -97,7 +97,7 @@ void setup(void) {
         .level = GPIO_LEVEL_LOW,
     };
 
-    gpio_driver.open(LED_PIN, &gpio1_config);
+    gpio_driver.init(LED_PIN, &gpio1_config);
 
 #if (DEBUG_USE_SEGGER_RTT == 0)
     usart_driver_config_t uart1_config = {
@@ -110,7 +110,7 @@ void setup(void) {
         .event_cb = uart1_event_callback,
     };
 
-    usart_driver.open(USART_NUM_1, &uart1_config);
+    usart_driver.init(USART_NUM_1, &uart1_config);
 #endif // DEBUG_USE_SEGGER_RTT == 0
 }
 
@@ -287,7 +287,7 @@ int __io_putchar(int ch) {
 #if (DEBUG_USE_SEGGER_RTT == 1)
     SEGGER_RTT_Write(0, &ch, 1);
 #else
-    usart_driver.poll_write(USART_NUM_1, (uint8_t*)&ch, 1, 0x1000);
+    usart_driver.poll_send(USART_NUM_1, (uint8_t*)&ch, 1, 0x1000);
 #endif
     return ch;
 }

@@ -54,11 +54,15 @@ static const osThreadAttr_t eco_thread_attr = {
     .stack_size = 1024,
 };
 
+// Timer
+// static osTimerId_t cdc_periodic_timer_id = NULL;
+
 static void create_thread(void);
 static void start_thread(void *argument);
 static void led_thread(void *argument);
 static void eco_thread(void *argument);
 
+// ring_buffer_t usb_cdc_rx_buffer;
 uint8_t rx_buffer[ECO_RX_BUFFER_SIZE];
 uint32_t rx_buffer_ptr_in = 0;
 uint32_t rx_buffer_ptr_out = 0;
@@ -76,6 +80,11 @@ int main(void) {
 
     // Initialize the RTOS scheduler
     osKernelInitialize();
+
+    // Create the timer
+    // cdc_periodic_timer_id = osTimerNew(cdc_periodic_timer_callback, osTimerPeriodic, NULL, NULL);
+
+    // osTimerStart(cdc_periodic_timer_id, CDC_POLLING_INTERVAL);
 
     // Create the start thread
     start_thread_id = osThreadNew(start_thread, NULL, &start_thread_attr);
@@ -99,7 +108,7 @@ void setup(void) {
         .level = GPIO_LEVEL_LOW,
     };
 
-    gpio_driver.open(LED_PIN, &gpio1_config);
+    gpio_driver.init(LED_PIN, &gpio1_config);
 
     usart_driver_config_t uart1_config = {
         .mode = USART_MODE_UART,
@@ -111,9 +120,15 @@ void setup(void) {
         .event_cb = uart1_event_callback,
     };
 
-    usart_driver.open(USART_NUM_1, &uart1_config);
+    usart_driver.init(USART_NUM_1, &uart1_config);
 
-    usart_driver.read(USART_NUM_1, rx_buffer, 1);
+    // ring_buffer_config_t usb_cdc_rx_buffer_config = {
+    //     .size = ECO_RX_BUFFER_SIZE,
+    // };
+
+    // ring_buffer.open(&usb_cdc_rx_buffer, &usb_cdc_rx_buffer_config);
+
+    usart_driver.receive(USART_NUM_1, rx_buffer, 1);
 }
 
 /**
@@ -153,7 +168,7 @@ static void led_thread(void *argument) {
     /* Get the current tick */
     tick = osKernelGetTickCount();
 
-    gpio_driver.open(LED_PIN, &gpio1_config);
+    gpio_driver.init(LED_PIN, &gpio1_config);
 
     while (1) {
         gpio_driver.toggle(LED_PIN);
@@ -186,7 +201,7 @@ static void eco_thread(void *argument) {
 
             buffer_ptr = rx_buffer_ptr_out;
 
-            if (usart_driver.write(USART_NUM_1, (uint8_t*)(rx_buffer + buffer_ptr), buffer_size) == 0) {
+            if (usart_driver.send(USART_NUM_1, (uint8_t*)(rx_buffer + buffer_ptr), buffer_size) == 0) {
                 rx_buffer_ptr_out += buffer_size;
 
                 if (rx_buffer_ptr_out >= ECO_RX_BUFFER_SIZE) {
@@ -197,7 +212,35 @@ static void eco_thread(void *argument) {
 
         /* Relatively accurate delay */
         tick += freq;
-        osDelayUntil(tick);
+        // osDelayUntil(tick);
+    }
+}
+
+/**
+ * @brief Timer callback function
+ * 
+ * @param argument 
+ */
+static void cdc_periodic_timer_callback(void *argument) {
+    uint32_t buffer_ptr;
+    uint32_t buffer_size;
+
+    if (rx_buffer_ptr_in != rx_buffer_ptr_out) {
+        if (rx_buffer_ptr_out > rx_buffer_ptr_in) {
+            buffer_size = ECO_RX_BUFFER_SIZE - rx_buffer_ptr_out;
+        } else {
+            buffer_size = rx_buffer_ptr_in - rx_buffer_ptr_out;
+        }
+
+        buffer_ptr = rx_buffer_ptr_out;
+
+        if (usart_driver.send(USART_NUM_1, (uint8_t*)(rx_buffer + buffer_ptr), buffer_size) == 0) {
+            rx_buffer_ptr_out += buffer_size;
+
+            if (rx_buffer_ptr_out >= ECO_RX_BUFFER_SIZE) {
+                rx_buffer_ptr_out = 0;
+            }
+        }
     }
 }
 
@@ -218,7 +261,7 @@ static void uart1_event_callback(uint32_t event) {
             rx_buffer_ptr_in = 0;
         }
 
-        usart_driver.read(USART_NUM_1, (uint8_t*)(rx_buffer + rx_buffer_ptr_in), 1);
+        usart_driver.receive(USART_NUM_1, (uint8_t*)(rx_buffer + rx_buffer_ptr_in), 1);
     }
 
     if (event & USART_EVENT_SEND_COMPLETE) {
