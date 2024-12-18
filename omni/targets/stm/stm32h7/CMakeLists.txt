@@ -20,7 +20,8 @@ add_library(omni-stm32h7 INTERFACE)
 
 # Add the ll drivers
 if(NOT ${CONFIG_OMNI_DRIVER} STREQUAL "")
-    omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_I2C omni-stm32h7 drivers/usart_ll.c)
+    omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_SPI omni-stm32h7 drivers/spi_ll.c)
+    omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_USART omni-stm32h7 drivers/usart_ll.c)
     omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_USB omni-stm32h7 drivers/usb_ll.c)
 endif()
 
@@ -33,6 +34,7 @@ omni_add_configure_file(${STARTUP_SOURCE_FILE} ${STARTUP_TARGET_FILE})
 if(DEFINED CONFIG_OMNI_DRIVER)
     omni_add_configure_file(${LS_SOURCE_FILE} ${LS_TARGET_FILE})
     omni_set_linker_file(omni-stm32h7 ${CONFIG_OMNI_BOARD} ${LS_TARGET_FILE})
+    omni_add_configure_file(${SCT_SOURCE_FILE} ${SCT_TARGET_FILE})
 endif()
 
 target_compile_definitions(omni-stm32h7 INTERFACE

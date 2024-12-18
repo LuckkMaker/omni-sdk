@@ -28,22 +28,22 @@
 
 static usb_phy_obj_t usb_phy_obj[USB_NUM_MAX];
 
-static int usb_phy_open(usb_num_t usb_num, usb_phy_driver_config_t *config);
-static int usb_phy_close(usb_num_t usb_num);
-static void usb_phy_start(usb_num_t usb_num);
-static void usb_phy_stop(usb_num_t usb_num);
-static usb_dev_t* usb_phy_get_dev(usb_num_t usb_num);
+static int usb_phy_hal_init(usb_num_t usb_num, usb_phy_driver_config_t *config);
+static int usb_phy_hal_deinit(usb_num_t usb_num);
+static void usb_phy_hal_start(usb_num_t usb_num);
+static void usb_phy_hal_stop(usb_num_t usb_num);
+static usb_dev_t* usb_phy_hal_get_dev(usb_num_t usb_num);
 
 const struct usb_phy_driver_api usb_phy_driver = {
-    .open = usb_phy_open,
-    .close = usb_phy_close,
-    .start = usb_phy_start,
-    .stop = usb_phy_stop,
-    .get_dev = usb_phy_get_dev,
+    .init = usb_phy_hal_init,
+    .deinit = usb_phy_hal_deinit,
+    .start = usb_phy_hal_start,
+    .stop = usb_phy_hal_stop,
+    .get_dev = usb_phy_hal_get_dev,
 };
 
-static int usb_phy_set_device(usb_dev_t *dev);
-static int usb_phy_set_host(usb_dev_t *dev);
+static int usb_phy_hal_set_device(usb_dev_t *dev);
+static int usb_phy_hal_set_host(usb_dev_t *dev);
 static void usb_phy_hal_irq_register(void);
 static void usb_phy_hal_set_gpio(usb_dev_t *dev);
 static void usb_phy_hal_reset_gpio(usb_dev_t *dev);
@@ -57,7 +57,7 @@ static void usb_phy_hal_reset_clock(usb_num_t usb_num);
  * @param config Pointer to USB PHY driver configuration structure
  * @return Operation status
  */
-static int usb_phy_open(usb_num_t usb_num, usb_phy_driver_config_t *config) {
+static int usb_phy_hal_init(usb_num_t usb_num, usb_phy_driver_config_t *config) {
     omni_assert(usb_num < USB_NUM_MAX);
     omni_assert_not_null(config);
 
@@ -139,7 +139,7 @@ static int usb_phy_open(usb_num_t usb_num, usb_phy_driver_config_t *config) {
  * @param usb_num USB PHY number
  * @return Operation status
  */
-static int usb_phy_close(usb_num_t usb_num) {
+static int usb_phy_hal_deinit(usb_num_t usb_num) {
     omni_assert(usb_num < USB_NUM_MAX);
 
     usb_phy_obj_t *obj = &usb_phy_obj[usb_num];
@@ -175,7 +175,7 @@ static int usb_phy_close(usb_num_t usb_num) {
  * 
  * @param usb_num USB PHY number
  */
-static void usb_phy_start(usb_num_t usb_num) {
+static void usb_phy_hal_start(usb_num_t usb_num) {
     omni_assert(usb_num < USB_NUM_MAX);
 
     usb_phy_obj_t *obj = &usb_phy_obj[usb_num];
@@ -195,7 +195,7 @@ static void usb_phy_start(usb_num_t usb_num) {
  * 
  * @param usb_num USB PHY number
  */
-static void usb_phy_stop(usb_num_t usb_num) {
+static void usb_phy_hal_stop(usb_num_t usb_num) {
     omni_assert(usb_num < USB_NUM_MAX);
 
     usb_phy_obj_t *obj = &usb_phy_obj[usb_num];
@@ -216,7 +216,7 @@ static void usb_phy_stop(usb_num_t usb_num) {
  * @param usb_num USB PHY number
  * @return Pointer to USB PHY device information
  */
-static usb_dev_t* usb_phy_get_dev(usb_num_t usb_num) {
+static usb_dev_t* usb_phy_hal_get_dev(usb_num_t usb_num) {
     omni_assert(usb_num < USB_NUM_MAX);
     if (usb_phy_obj[usb_num].dev != NULL) {
         return usb_phy_obj[usb_num].dev;
@@ -288,7 +288,7 @@ static void usb_phy_hal_irq_register(void) {
  * 
  * @return Operation status
  */
-static int usb_phy_set_device(usb_dev_t *dev) {
+static int usb_phy_hal_set_device(usb_dev_t *dev) {
     PCD_HandleTypeDef *handle = (PCD_HandleTypeDef *)dev->pcd_handle;
     omni_assert_not_null(handle);
 
@@ -340,7 +340,7 @@ static int usb_phy_set_device(usb_dev_t *dev) {
  * 
  * @return Operation status
  */
-static int usb_phy_set_host(usb_dev_t *dev) {
+static int usb_phy_hal_set_host(usb_dev_t *dev) {
     HCD_HandleTypeDef *handle = (HCD_HandleTypeDef *)dev->hcd_handle;
     omni_assert_not_null(handle);
 

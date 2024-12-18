@@ -23,18 +23,18 @@
 /* Includes ------------------------------------------------------------------*/
 #include "drivers/clock.h"
 
-static int clock_open(void);
+static int clock_hal_init(void);
 
 const struct clock_driver_api clock_driver = {
-    .open = clock_open,
+    .init = clock_hal_init,
 };
 
 /**
- * @brief Open clock driver
+ * @brief Initialize clock driver
  * 
  * @return Operation status
  */
-static int clock_open(void) {
+static int clock_hal_init(void) {
     uint32_t osc_type = 0;
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};

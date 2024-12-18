@@ -26,24 +26,24 @@
 
 extern void USBD_IRQHandler(uint8_t busid);
 
-static int usbd_open(usb_num_t usb_num, usbd_config_t *config);
-static int usbd_close(usb_num_t usb_num);
+static int usbd_init(usb_num_t usb_num, usbd_config_t *config);
+static int usbd_deinit(usb_num_t usb_num);
 
 const struct usb_device_api usb_device = {
-    .open = usbd_open,
-    .close = usbd_close,
+    .init = usbd_init,
+    .deinit = usbd_deinit,
 };
 
 static void add_endpoint(uint8_t busid, struct usbd_itf *itf);
 
 /**
- * @brief Open usb device
+ * @brief Initialize USB device
  * 
  * @param usb_num USB PHY number
  * @param config Pointer to CherryUSB device configuration structure
  * @return Operation status
  */
-static int usbd_open(usb_num_t usb_num, usbd_config_t *config) {
+static int usbd_init(usb_num_t usb_num, usbd_config_t *config) {
 #if defined(CONFIG_CHERRYUSB_DEVICE_MSC)
     uint8_t ep_in_addr;
     uint8_t ep_out_addr;
@@ -58,14 +58,14 @@ static int usbd_open(usb_num_t usb_num, usbd_config_t *config) {
         .event_cb = NULL, // When using cherryusb, the USB PHY event callback is not used
     };
 
-    if (usb_phy_driver.open(usb_num, &usb_phy_config) != OMNI_OK) {
+    if (usb_phy_driver.init(usb_num, &usb_phy_config) != OMNI_OK) {
         return OMNI_FAIL;
     }
 
     // Get USB phy device
     usb_dev = usb_phy_driver.get_dev(usb_num);
     if (usb_dev == NULL) {
-        usb_phy_driver.close(usb_num);
+        usb_phy_driver.deinit(usb_num);
         return OMNI_FAIL;
     }
 
@@ -134,7 +134,7 @@ static int usbd_open(usb_num_t usb_num, usbd_config_t *config) {
 
     // Register USB event callback and initialize USB device
     if (usbd_initialize(config->busid, (uint32_t)usb_dev->ins, config->usbd_event_callback) != 0U) {
-        usb_phy_driver.close(usb_num);
+        usb_phy_driver.deinit(usb_num);
         return OMNI_FAIL;
     }
 
@@ -142,12 +142,12 @@ static int usbd_open(usb_num_t usb_num, usbd_config_t *config) {
 }
 
 /**
- * @brief Close CherryUSB device
+ * @brief Deinitialize USB device
  * 
  * @param usb_num USB PHY number
  * @return Operation status
  */
-static int usbd_close(usb_num_t usb_num) {
+static int usbd_deinit(usb_num_t usb_num) {
     // TODO: Implement USB device close function
     return OMNI_OK;
 }

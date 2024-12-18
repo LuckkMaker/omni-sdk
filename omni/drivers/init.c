@@ -39,7 +39,7 @@ void driver_init(void) {
     power_init();
 
     // Initialize clock
-    if (clock_driver.open() != OMNI_OK) {
+    if (clock_driver.init() != OMNI_OK) {
         error_handler();
     }
 

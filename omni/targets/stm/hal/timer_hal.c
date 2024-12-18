@@ -24,14 +24,14 @@
 #include "drivers/timer.h"
 #include "hal/dwt_hal.h"
 
-static void timer_delay_ms(uint32_t delay);
-static void timer_delay_us(uint32_t delay);
-static uint32_t timer_get_tick(uint32_t frequency);
+static void timer_hal_delay_ms(uint32_t delay);
+static void timer_hal_delay_us(uint32_t delay);
+static uint32_t timer_hal_get_tick(uint32_t frequency);
 
 const struct timer_driver_api timer_driver = {
-    .delay_ms = timer_delay_ms,
-    .delay_us = timer_delay_us,
-    .get_tick = timer_get_tick,
+    .delay_ms = timer_hal_delay_ms,
+    .delay_us = timer_hal_delay_us,
+    .get_tick = timer_hal_get_tick,
 };
 
 /**
@@ -39,7 +39,7 @@ const struct timer_driver_api timer_driver = {
  * 
  * @param delay Number of milliseconds to delay
  */
-static void timer_delay_ms(uint32_t delay) {
+static void timer_hal_delay_ms(uint32_t delay) {
     dwt_hal_delay_ms(delay);
 }
 
@@ -48,7 +48,7 @@ static void timer_delay_ms(uint32_t delay) {
  * 
  * @param delay Number of microseconds to delay
  */
-static void timer_delay_us(uint32_t delay) {
+static void timer_hal_delay_us(uint32_t delay) {
     dwt_hal_delay_us(delay);
 }
 
@@ -57,6 +57,6 @@ static void timer_delay_us(uint32_t delay) {
  * 
  * @return Current tick
  */
-static uint32_t timer_get_tick(uint32_t frequency) {
+static uint32_t timer_hal_get_tick(uint32_t frequency) {
     return dwt_hal_get_tick(frequency);
 }

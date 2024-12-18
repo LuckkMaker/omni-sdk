@@ -57,18 +57,18 @@
 #error Unsupported GPIO peripheral.
 #endif
 
-static int gpio_open(uint32_t gpio_num, gpio_driver_config_t *config);
-static int gpio_close(uint32_t gpio_num);
-static int gpio_set_level(uint32_t gpio_num, uint32_t level);
-static uint32_t gpio_get_level(uint32_t gpio_num);
-static int gpio_toggle(uint32_t gpio_num);
+static int gpio_hal_init(uint32_t gpio_num, gpio_driver_config_t *config);
+static int gpio_hal_deinit(uint32_t gpio_num);
+static int gpio_hal_set_level(uint32_t gpio_num, uint32_t level);
+static uint32_t gpio_hal_get_level(uint32_t gpio_num);
+static int gpio_hal_toggle(uint32_t gpio_num);
 
 const struct gpio_driver_api gpio_driver = {
-    .open = gpio_open,
-    .close = gpio_close,
-    .set_level = gpio_set_level,
-    .get_level = gpio_get_level,
-    .toggle = gpio_toggle,
+    .init = gpio_hal_init,
+    .deinit = gpio_hal_deinit,
+    .set_level = gpio_hal_set_level,
+    .get_level = gpio_hal_get_level,
+    .toggle = gpio_hal_toggle,
 };
 
 /**
@@ -78,7 +78,7 @@ const struct gpio_driver_api gpio_driver = {
  * @param config Pointer to GPIO driver configuration structure
  * @return Operation status
  */
-static int gpio_open(uint32_t gpio_num, gpio_driver_config_t *config) {
+static int gpio_hal_init(uint32_t gpio_num, gpio_driver_config_t *config) {
     GPIO_TypeDef *gpio_port;
     uint32_t gpio_pin;
     uint32_t gpio_mode;
@@ -117,7 +117,7 @@ static int gpio_open(uint32_t gpio_num, gpio_driver_config_t *config) {
  * @param gpio_num GPIO number
  * @return Operation status
  */
-static int gpio_close(uint32_t gpio_num) {
+static int gpio_hal_deinit(uint32_t gpio_num) {
     GPIO_TypeDef *gpio_port;
     uint32_t gpio_pin;
     omni_assert(PIN_PORT(gpio_num) < GPIO_PORT_MAX);
@@ -137,7 +137,7 @@ static int gpio_close(uint32_t gpio_num) {
  * @param level GPIO level
  * @return Operation status
  */
-static int gpio_set_level(uint32_t gpio_num, uint32_t level) {
+static int gpio_hal_set_level(uint32_t gpio_num, uint32_t level) {
     GPIO_TypeDef *gpio_port;
     uint32_t gpio_pin;
     omni_assert(PIN_PORT(gpio_num) < GPIO_PORT_MAX);
@@ -156,7 +156,7 @@ static int gpio_set_level(uint32_t gpio_num, uint32_t level) {
  * @param gpio_num GPIO number
  * @return GPIO level
  */
-static uint32_t gpio_get_level(uint32_t gpio_num) {
+static uint32_t gpio_hal_get_level(uint32_t gpio_num) {
     GPIO_TypeDef *gpio_port;
     uint32_t gpio_pin;
     omni_assert(PIN_PORT(gpio_num) < GPIO_PORT_MAX);
@@ -173,7 +173,7 @@ static uint32_t gpio_get_level(uint32_t gpio_num) {
  * @param gpio_num GPIO number
  * @return Operation status
  */
-static int gpio_toggle(uint32_t gpio_num) {
+static int gpio_hal_toggle(uint32_t gpio_num) {
     GPIO_TypeDef *gpio_port;
     uint32_t gpio_pin;
     omni_assert(PIN_PORT(gpio_num) < GPIO_PORT_MAX);

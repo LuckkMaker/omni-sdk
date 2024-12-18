@@ -92,21 +92,21 @@ typedef struct usbd_config {
 } usbd_config_t;
 
 /**
- * @brief Open device component
+ * @brief Initialize usb device
  */
-typedef int (*usbd_open_t)(usb_num_t usb_num, usbd_config_t *config);
+typedef int (*usbd_init_t)(usb_num_t usb_num, usbd_config_t *config);
 
 /**
- * @brief Close device component
+ * @brief Deinitialize usb device
  */
-typedef int (*usbd_close_t)(usb_num_t usb_num);
+typedef int (*usbd_deinit_t)(usb_num_t usb_num);
 
 /**
  * @brief USB device component API
  */
 struct usb_device_api {
-    usbd_open_t open;
-    usbd_close_t close;
+    usbd_init_t init;
+    usbd_deinit_t deinit;
 };
 
 extern const struct usb_device_api usb_device;

@@ -30,10 +30,15 @@
 #include "drivers/init.h"
 #include "drivers/gpio.h"
 #include "drivers/timer.h"
+#include "ipc/ring_buffer.h"
 
 #if defined(CONFIG_OMNI_DRIVER_I2C)
 #include "drivers/i2c.h"
 #endif /* CONFIG_OMNI_DRIVER_I2C */
+
+#if defined(CONFIG_OMNI_DRIVER_SPI)
+#include "drivers/spi.h"
+#endif /* CONFIG_OMNI_DRIVER_SPI */
 
 #if defined(CONFIG_OMNI_DRIVER_USART)
 #include "drivers/usart.h"

@@ -2,8 +2,8 @@
   * @file    omni_device_cfg.h
   * @author  LuckkMaker
   * @brief   OMNI device configuration for STM32F4 series
-  * @version 1.0.5
-  * @date    11-Nov-2024
+  * @version 1.0.9
+  * @date    27-Nov-2024
   * @attention
   *
   * Copyright (c) 2024 LuckkMaker
@@ -52,12 +52,6 @@ extern "C" {
 #define PLL_SRC0            RCC_PLLSOURCE_HSI
 #define PLL_SRC1            RCC_PLLSOURCE_HSE
 #define PLL_SRC(num)        PLL_SRC##num
-
-// OSC type
-#define OSC_TYPE_HSE        RCC_OSCILLATORTYPE_HSE
-#define OSC_TYPE_HSI        RCC_OSCILLATORTYPE_HSI
-#define OSC_TYPE_LSE        RCC_OSCILLATORTYPE_LSE
-#define OSC_TYPE_LSI        RCC_OSCILLATORTYPE_LSI
 
 // Get SYSCLK source
 #define SYSCLK_SRC0         RCC_SYSCLKSOURCE_HSI
@@ -176,28 +170,6 @@ extern "C" {
 #define CONFIG_PLL_Q 7
 //  </e>
 // </h>
-
-#if (CONFIG_HSE_STATE != 0)
-#if (CONFIG_LSE_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSE | OSC_TYPE_LSE)
-#else
-#if (CONFIG_LSI_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSE | OSC_TYPE_LSI)
-#else
-#define CONFIG_OSC_TYPE OSC_TYPE_HSE
-#endif /* CONFIG_LSI_STATE */
-#endif /* CONFIG_LSE_STATE */
-#else
-#if (CONFIG_LSE_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSI | OSC_TYPE_LSE)
-#else
-#if (CONFIG_LSI_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSI | OSC_TYPE_LSI)
-#else
-#define CONFIG_OSC_TYPE OSC_TYPE_HSI
-#endif /* CONFIG_LSI_STATE */
-#endif /* CONFIG_LSE_STATE */
-#endif /* CONFIG_HSE_STATE */
 
 // <h> Clock Configuration
 //  <o> Flash Latency <0-15>
@@ -974,6 +946,12 @@ extern "C" {
 //  <e> USB OTG FS (USB Number 1)
 //  <i> Configuration settings for OMNI Driver USB OTG FS
 #define CONFIG_USB_OTG_FS 0
+//      <q> Enable VBUS Sensing
+//      <i> Enable VBUS Sensing
+#define CONFIG_USB_OTG_FS_VBUS_SENSING 0
+//      <q> Enable SOF Output
+//      <i> Enable SOF Output
+#define CONFIG_USB_OTG_FS_SOF 0
 //      <o> USB OTG FS DM Pin <0=>PA11
 #define CONFIG_USB_OTG_FS_DM_PIN_VAL 0
 #if (CONFIG_USB_OTG_FS_DM_PIN_VAL == 0)
@@ -1024,15 +1002,11 @@ extern "C" {
 //      <e> Device
 //      <i> Enable Device
 #define CONFIG_USB_OTG_FS_DEVICE 0
-//          <q> Enable VBUS Sensing
-//          <i> Enable VBUS Sensing
-#define CONFIG_USB_OTG_FS_VBUS_SENSING 0
-//          <q> Enable SOF Output
-//          <i> Enable SOF Output
-#define CONFIG_USB_OTG_FS_SOF
 //          <q> Enable Low Power
 //          <i> Enable Low Power
 #define CONFIG_USB_OTG_FS_LOW_POWER 0
+//          Endpoint Number
+#define CONFIG_USB_OTG_FS_ENDPOINT_NUMBER 4
 //          <h> FIFO Configuration
 //              <o> RX FIFO Size <0x10-0x400:0x10>
 //              <i> Set size of RX FIFO
@@ -1040,22 +1014,23 @@ extern "C" {
 //              <o> TX FIFO 0 Size <0x10-0x400:0x10>
 //              <i> Set size of TX FIFO 0
 #define CONFIG_USB_OTG_FS_TX_FIFO_0_SIZE 0x40
-//              <o> TX FIFO 1 Size <0x10-0x400:0x10>
+//              <o> TX FIFO 1 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 1
 #define CONFIG_USB_OTG_FS_TX_FIFO_1_SIZE 0x10
-//              <o> TX FIFO 2 Size <0x10-0x400:0x10>
+//              <o> TX FIFO 2 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 2
-#define CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE 0x10
-//              <o> TX FIFO 3 Size <0x10-0x400:0x10>
+#define CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE 0x00
+//              <o> TX FIFO 3 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 3
-#define CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE 0x10
+#define CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE 0x00
 //          </h>
 //      </e>
 
 //      <e> Host
 //      <i> Enable Host
 #define CONFIG_USB_OTG_FS_HOST 0
-
+//      Channel Number
+#define CONFIG_USB_OTG_FS_CHANNEL_NUMBER 8
 //          <e> VBUS Power Pin
 //          <i> Configure Pin to drive external VBUS switch
 //          <i> GPIO Port (x = A..H, y = 0..15) or (x = I, y = 0..11)
@@ -1099,6 +1074,12 @@ extern "C" {
 //      <i> Use dedicated DMA for transfers
 //      <i> If DMA is used all transfers data buffers must be 32-bit aligned
 #define CONFIG_USB_OTG_HS_DMA 0
+//      <q> Enable VBUS Sensing
+//      <i> Enable VBUS Sensing
+#define CONFIG_USB_OTG_HS_VBUS_SENSING 0
+//      <q> Enable SOF Output
+//      <i> Enable SOF Output
+#define CONFIG_USB_OTG_HS_SOF 0
 //      <o> USB OTG HS DM Pin <0=>PB14
 #define CONFIG_USB_OTG_HS_DM_PIN_VAL 0
 #if (CONFIG_USB_OTG_HS_DM_PIN_VAL == 0)
@@ -1243,15 +1224,11 @@ extern "C" {
 //      <e> Device
 //      <i> Enable Device
 #define CONFIG_USB_OTG_HS_DEVICE 0
-//          <q> Enable VBUS Sensing
-//          <i> Enable VBUS Sensing
-#define CONFIG_USB_OTG_HS_VBUS_SENSING 0
-//          <q> Enable SOF Output
-//          <i> Enable SOF Output
-#define CONFIG_USB_OTG_HS_SOF
 //          <q> Enable Low Power
 //          <i> Enable Low Power
 #define CONFIG_USB_OTG_HS_LOW_POWER 0
+//          Endpoint Number
+#define CONFIG_USB_OTG_HS_ENDPOINT_NUMBER 6
 //          <h> FIFO Configuration
 //              <o> RX FIFO Size <0x10-0x400:0x10>
 //              <i> Set size of RX FIFO
@@ -1259,28 +1236,29 @@ extern "C" {
 //              <o> TX FIFO 0 Size <0x10-0x400:0x10>
 //              <i> Set size of TX FIFO 0
 #define CONFIG_USB_OTG_HS_TX_FIFO_0_SIZE 0x80
-//              <o> TX FIFO 1 Size <0x10-0x400:0x10>
+//              <o> TX FIFO 1 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 1
 #define CONFIG_USB_OTG_HS_TX_FIFO_1_SIZE 0x10
-//              <o> TX FIFO 2 Size <0x10-0x400:0x10>
+//              <o> TX FIFO 2 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 2
-#define CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE 0x10
-//              <o> TX FIFO 3 Size <0x10-0x400:0x10>
+#define CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE 0x00
+//              <o> TX FIFO 3 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 3
-#define CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE 0x10
-//              <o> TX FIFO 4 Size <0x10-0x400:0x10>
+#define CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE 0x00
+//              <o> TX FIFO 4 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 4
-#define CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE 0x10
-//              <o> TX FIFO 5 Size <0x10-0x400:0x10>
+#define CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE 0x00
+//              <o> TX FIFO 5 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 5
-#define CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE 0x10
+#define CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE 0x00
 //          </h>
 //      </e>
 
 //      <e> Host
 //      <i> Enable Host
 #define CONFIG_USB_OTG_HS_HOST 0
-
+//      Channel Number
+#define CONFIG_USB_OTG_HS_CHANNEL_NUMBER 12
 //          <e> VBUS Power Pin
 //          <i> Configure Pin to drive external VBUS switch
 //          <i> GPIO Port (x = A..H, y = 0..15) or (x = I, y = 0..11)
@@ -1315,6 +1293,82 @@ extern "C" {
 //      </e>
 // </e>
 // </h>
+
+#if (CONFIG_USB_OTG_HS == 1)
+#if (CONFIG_USB_OTG_HS_PHY == 1)
+#define USB_OTG_PHY                   PCD_PHY_ULPI
+#else
+#define USB_OTG_PHY                   PCD_PHY_EMBEDDED
+#endif /* CONFIG_USB_OTG_HS_PHY == 1 */
+#if (CONFIG_USB_OTG_HS_VBUS_SENSING == 1)
+#define USB_OTG_VBUS_SENSING_ENABLE   ENABLE
+#else
+#define USB_OTG_VBUS_SENSING_ENABLE   DISABLE
+#endif /* CONFIG_USB_OTG_HS_VBUS_SENSING == 1 */
+#if (CONFIG_USB_OTG_HS_SOF == 1)
+#define USB_OTG_SOF_ENABLE            ENABLE
+#else
+#define USB_OTG_SOF_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS_SOF == 1 */
+#if (CONFIG_USB_OTG_HS_DMA == 1)
+#define USB_OTG_DMA_ENABLE            ENABLE
+#else
+#define USB_OTG_DMA_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS_DMA == 1 */
+#else
+#define USB_OTG_PHY                   PCD_PHY_EMBEDDED
+#if (CONFIG_USB_OTG_FS_VBUS_SENSING == 1)
+#define USB_OTG_VBUS_SENSING_ENABLE   ENABLE
+#else
+#define USB_OTG_VBUS_SENSING_ENABLE   DISABLE
+#endif /* CONFIG_USB_OTG_FS_VBUS_SENSING == 1 */
+#if (CONFIG_USB_OTG_FS_SOF == 1)
+#define USB_OTG_SOF_ENABLE            ENABLE
+#else
+#define USB_OTG_SOF_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_FS_SOF == 1 */
+#define USB_OTG_DMA_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS == 1 */
+
+#if (CONFIG_USB_OTG_HS_DEVICE == 1)
+// PCD configuration
+#define USB_OTG_ENDPOINT_NUMBER     CONFIG_USB_OTG_HS_ENDPOINT_NUMBER
+#if (CONFIG_USB_OTG_HS_LOW_POWER == 1)
+#define USB_OTG_LOW_POWER_ENABLE    ENABLE
+#else
+#define USB_OTG_LOW_POWER_ENABLE    DISABLE
+#endif /* CONFIG_USB_OTG_HS_LOW_POWER == 1 */
+
+// FIFO sizes
+#define CONFIG_USB_OTG_RX_FIFO_SIZE CONFIG_USB_OTG_HS_RX_FIFO_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_0_SIZE CONFIG_USB_OTG_HS_TX_FIFO_0_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_1_SIZE CONFIG_USB_OTG_HS_TX_FIFO_1_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_2_SIZE CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_3_SIZE CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_4_SIZE CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_5_SIZE CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE
+#else
+// PCD configuration
+#define USB_OTG_ENDPOINT_NUMBER     CONFIG_USB_OTG_FS_ENDPOINT_NUMBER
+#if (CONFIG_USB_OTG_FS_LOW_POWER == 1)
+#define USB_OTG_LOW_POWER_ENABLE    ENABLE
+#else
+#define USB_OTG_LOW_POWER_ENABLE    DISABLE
+#endif /* CONFIG_USB_OTG_FS_LOW_POWER == 1 */
+
+// FIFO sizes
+#define CONFIG_USB_OTG_RX_FIFO_SIZE CONFIG_USB_OTG_FS_RX_FIFO_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_0_SIZE CONFIG_USB_OTG_FS_TX_FIFO_0_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_1_SIZE CONFIG_USB_OTG_FS_TX_FIFO_1_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_2_SIZE CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_3_SIZE CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE
+#endif /* CONFIG_USB_OTG_HS_DEVICE == 1 */
+
+#if (CONFIG_USB_OTG_HS_HOST == 1)
+#define CONFIG_USB_OTG_CHANNEL_NUMBER CONFIG_USB_OTG_HS_CHANNEL_NUMBER
+#else
+#define CONFIG_USB_OTG_CHANNEL_NUMBER CONFIG_USB_OTG_FS_CHANNEL_NUMBER
+#endif /* CONFIG_USB_OTG_HS_HOST == 1 */
 
 //-------- <<< end of configuration section >>> --------------------------------
 

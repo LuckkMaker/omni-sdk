@@ -35,3 +35,6 @@ omni_lib_link_ifdef(CONFIG_SEGGER_RTT omni-core omni-segger-rtt)
 
 omni_add_subdirectory_ifdef(CONFIG_SHELL_LETTER letter_shell)
 omni_lib_link_ifdef(CONFIG_SHELL_LETTER omni-core omni-letter-shell)
+
+omni_add_subdirectory_ifdef(CONFIG_LUA lua)
+omni_lib_link_ifdef(CONFIG_LUA omni-core omni-lua)

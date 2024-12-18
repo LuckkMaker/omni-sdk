@@ -70,6 +70,10 @@ extern "C" {
 #define KB(size) ((size) * 1024)
 #endif /* KB */
 
+#if !defined(BIT)
+#define BIT(n) (1UL << (n))
+#endif /* BIT */
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

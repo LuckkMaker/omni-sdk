@@ -1,0 +1,9 @@
+menuconfig OMNI_DRIVER_SPI
+    bool "SPI"
+    default n
+    help
+        Enable the SPI driver configuration.
+
+if OMNI_DRIVER_SPI
+
+endif # OMNI_DRIVER_SPI

@@ -13,6 +13,7 @@ if OMNI_DRIVER
 
 rsource "display/Kconfig"
 rsource "i2c/Kconfig"
+rsource "spi/Kconfig"
 rsource "usart/Kconfig"
 rsource "usb/Kconfig"
 rsource "timer/Kconfig"

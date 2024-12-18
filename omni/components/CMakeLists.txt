@@ -42,15 +42,6 @@ omni_lib_inc_ifdef(CONFIG_COMPONENT_COMMAND omni-components
     command
 )
 
-# omni ring buffer component
-omni_lib_src_ifdef(CONFIG_OMNI_COMPONENT_RING_BUFFER omni-components
-    ring_buffer/ring_buffer.c
-)
-
-omni_lib_inc_ifdef(CONFIG_OMNI_COMPONENT_RING_BUFFER omni-components
-    ring_buffer
-)
-
 target_include_directories(omni-components INTERFACE
     .
     include

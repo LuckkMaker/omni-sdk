@@ -41,6 +41,7 @@ set(OMNI_RTOS_CFG_DIR ${OMNI_BOARD_CFG_DIR}/rtos)
 set(OMNI_USB_CFG_DIR ${OMNI_BOARD_CFG_DIR}/usb)
 set(OMNI_CONSOLE_CFG_DIR ${OMNI_BOARD_CFG_DIR}/console)
 set(OMNI_DEBUG_CFG_DIR ${OMNI_BOARD_CFG_DIR}/debug)
+set(OMNI_LUA_CFG_DIR ${OMNI_BOARD_CFG_DIR}/lua)
 
 # message(STATUS "APPLICATION_SOURCE_DIR: ${APPLICATION_SOURCE_DIR}")
 
@@ -136,6 +137,7 @@ target_include_directories(omni-interface INTERFACE
     ${OMNI_USB_CFG_DIR}
     ${OMNI_CONSOLE_CFG_DIR}
     ${OMNI_DEBUG_CFG_DIR}
+    ${OMNI_LUA_CFG_DIR}
 )
 
 add_subdirectory(${OMNI_BASE}/cmsis ${CMAKE_BINARY_DIR}/omni/cmsis)

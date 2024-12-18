@@ -1,7 +1,7 @@
 /**
-  * @file    omni.h
+  * @file    spi_ll.h
   * @author  LuckkMaker
-  * @brief   Omni header file
+  * @brief   Low-level SPI configuration
   * @attention
   *
   * Copyright (c) 2024 LuckkMaker
@@ -21,26 +21,20 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef OMNI_H
-#define OMNI_H
+#ifndef OMNI_LL_SPI_H
+#define OMNI_LL_SPI_H
 
 /* Includes ------------------------------------------------------------------*/
-#include "omni_driver.h"
-#include "omni_component.h"
+#include "drivers/spi_types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define OMNI_VER_MAJOR                               0
-#define OMNI_VER_MINOR                               3
-#define OMNI_VER_PATCH                               5
-#define OMNI_VER                                     (OMNI_VER_MAJOR * 10000 + OMNI_VER_MINOR * 100 + OMNI_VER_PATCH)
-#define OMNI_STR(x)                                  #x
-#define OMNI_PROJECT_VERSION(major, minor, patch)    "v" APP_STR(major, minor, patch)
+spi_dev_t* spi_ll_get_dev(spi_num_t spi_num) ;
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* OMNI_H */
+#endif /* OMNI_LL_SPI_H */

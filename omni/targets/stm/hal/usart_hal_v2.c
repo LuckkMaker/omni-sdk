@@ -1,5 +1,5 @@
 /**
-  * @file    usart_hal.c
+  * @file    usart_hal_v2.c
   * @author  LuckkMaker
   * @brief   USART HAL driver
   * @attention
@@ -60,9 +60,6 @@ static void usart_hal_reset_gpio(usart_dev_t *dev);
 static void usart_hal_enable_clock(usart_num_t usart_num);
 static void usart_hal_reset_clock(usart_num_t usart_num);
 static usart_obj_t *usart_hal_get_obj(UART_HandleTypeDef *huart);
-
-static void usart_tx_dma_event_callback(DMA_HandleTypeDef *hdma);
-static void usart_rx_dma_event_callback(DMA_HandleTypeDef *hdma);
 
 /**
  * @brief Open the USART port
@@ -345,7 +342,7 @@ static int usart_hal_poll_send(usart_num_t usart_num, const uint8_t *data, uint3
 
     UART_HandleTypeDef *handle = obj->dev->handle;
 
-    if (HAL_UART_Transmit(handle, (uint8_t *)data, len, timeout) != HAL_OK) {
+    if (HAL_UART_Transmit(handle, (const uint8_t *)data, (uint16_t)len, timeout) != HAL_OK) {
         return OMNI_FAIL;
     }
 
@@ -371,7 +368,7 @@ static int usart_hal_poll_receive(usart_num_t usart_num, void *data, uint32_t le
 
     UART_HandleTypeDef *handle = obj->dev->handle;
 
-    if (HAL_UART_Receive(handle, (uint8_t *)data, len, timeout) != HAL_OK) {
+    if (HAL_UART_Receive(handle, (uint8_t *)data, (uint16_t)len, timeout) != HAL_OK) {
         return OMNI_FAIL;
     }
 
@@ -400,29 +397,12 @@ static int usart_hal_send(usart_num_t usart_num, const uint8_t *data, uint32_t l
         return OMNI_BUSY;
     }
 
-    // Prepare transfer data
-    obj->data.tx_buffer = (uint8_t*)((uint32_t)data);
-    obj->data.tx_num = len;
-    obj->data.tx_count = 0;
-
     obj->status.tx_busy = 1;
 
 #if (CONFIG_USART_TX_DMA == 1)
-    handle->hdmatx->XferCpltCallback = usart_tx_dma_event_callback;
-    handle->hdmatx->XferHalfCpltCallback = NULL;
-    handle->hdmatx->XferErrorCallback = NULL;
-    handle->hdmatx->XferAbortCallback = NULL;
-
-    __HAL_UART_CLEAR_FLAG(handle, UART_FLAG_TC);
-
-    HAL_DMA_Start_IT(handle->hdmatx, (uint32_t)obj->data.tx_buffer, (uint32_t)&handle->Instance->DR, len);
-
-    /* Enable the DMA transfer for transmit request by setting the DMAT bit
-       in the UART CR3 register */
-    ATOMIC_SET_BIT(handle->Instance->CR3, USART_CR3_DMAT);
+    HAL_UART_Transmit_DMA(handle, (const uint8_t *)data, (uint16_t)len);
 #else
-    /* Enable the UART Transmit data register empty Interrupt */
-    __HAL_UART_ENABLE_IT(handle, UART_IT_TXE);
+    HAL_UART_Transmit_IT(handle, (const uint8_t *)data, (uint16_t)len);
 #endif /* (CONFIG_USART_TX_DMA == 1) */
 
     return OMNI_OK;
@@ -450,41 +430,15 @@ static int usart_hal_receive(usart_num_t usart_num, void *data, uint32_t len) {
         return OMNI_BUSY;
     }
 
-    // Disable RXNE interrupt
-    ATOMIC_CLEAR_BIT(handle->Instance->CR1, USART_CR1_RXNEIE);
-
-    // Prepare transfer data
-    obj->data.rx_buffer = (uint8_t*)data;
-    obj->data.rx_num = len;
-    obj->data.rx_count = 0;
-
     // Clear error
     obj->error = (usart_driver_error_t){0};
 
     obj->status.rx_busy = 1;
 
 #if (CONFIG_USART_RX_DMA == 1)
-    handle->hdmarx->XferCpltCallback = usart_rx_dma_event_callback;
-    handle->hdmarx->XferHalfCpltCallback = NULL;
-    handle->hdmarx->XferErrorCallback = NULL;
-    handle->hdmarx->XferAbortCallback = NULL;
-
-    HAL_DMA_Start_IT(handle->hdmarx, (uint32_t)&handle->Instance->DR, (uint32_t)obj->data.rx_buffer, len);
-
-    /* Clear the Overrun flag just before enabling the DMA Rx request: can be mandatory for the second transfer */
-    __HAL_UART_CLEAR_OREFLAG(handle);
-
-    /* Enable the DMA transfer for the receiver request by setting the DMAR bit
-    in the UART CR3 register */
-    ATOMIC_SET_BIT(handle->Instance->CR3, USART_CR3_DMAR);
-
-    // Enable IDLE interrupt
-    ATOMIC_SET_BIT(handle->Instance->CR1, USART_CR1_IDLEIE);
+    HAL_UART_Receive_DMA(handle, (uint8_t *)data, (uint16_t)len);
 #else
-    // Enable IDLE interrupt
-    ATOMIC_SET_BIT(handle->Instance->CR1, USART_CR1_IDLEIE);
-    // Enable RXNE interrupt
-    ATOMIC_SET_BIT(handle->Instance->CR1, USART_CR1_RXNEIE);
+    HAL_UART_Receive_IT(handle, (uint8_t *)data, (uint16_t)len);
 #endif /* (CONFIG_USART_RX_DMA == 1) */
 
     return OMNI_OK;
@@ -525,139 +479,11 @@ static usart_driver_error_t usart_hal_get_error(usart_num_t usart_num) {
  * @brief USART IRQ handler
  */
 static void usart_hal_irq_request(usart_obj_t *obj) {
-    uint32_t event = 0;
-    uint16_t data = 0;
     omni_assert_not_null(obj);
 
     UART_HandleTypeDef *handle = obj->dev->handle;
 
-    // HAL_UART_IRQHandler(handle);
-
-    // Check read data register not empty
-    if ((__HAL_UART_GET_IT_SOURCE(handle, UART_IT_RXNE) != RESET) && \
-        (__HAL_UART_GET_FLAG(handle, UART_FLAG_RXNE) != RESET)) {
-        if (obj->status.rx_busy == 0U) {
-            // Receive has not been started
-
-            // Disable RXNE interrupt
-            ATOMIC_CLEAR_BIT(handle->Instance->CR1, USART_CR1_RXNEIE);
-            obj->error.rx_overflow = 1;
-            // Set RX overflow event
-            event |= USART_EVENT_RX_OVERFLOW;
-        } else {
-            // Read data from RX FIFO
-            data = (uint16_t)(handle->Instance->DR & (uint16_t)0x01FF);
-            *(obj->data.rx_buffer++) = (uint8_t)data;
-
-            // If nine bits data and no parity, read the 10th bit
-            if ((handle->Init.WordLength == UART_WORDLENGTH_9B) && \
-                (handle->Init.Parity == UART_PARITY_NONE)) {
-                *(obj->data.rx_buffer++) = (uint8_t)(data >> 8);
-            }
-            obj->data.rx_count++;
-
-            // Check if all data has been received
-            if (obj->data.rx_count == obj->data.rx_num) {
-                // Disable IDLE interrupt
-                ATOMIC_CLEAR_BIT(handle->Instance->CR1, USART_CR1_IDLEIE);
-                // Clear RX busy flag
-                obj->status.rx_busy = 0;
-                // Set receive complete event
-                event |= USART_EVENT_RECEIVE_COMPLETE;
-            }
-        }
-    }
-
-    // Check IDLE interrupt
-    // Note: USE HAL API to clear IDLE flag will cause the IDLE flag not be cleared
-    if ((LL_USART_IsEnabledIT_IDLE(handle->Instance) & \
-        LL_USART_IsActiveFlag_IDLE(handle->Instance)) && \
-        ((LL_USART_IsEnabledIT_RXNE(handle->Instance) & \
-        LL_USART_IsActiveFlag_RXNE(handle->Instance)) == 0U)) {
-        // Clear IDLE flag
-        __HAL_UART_CLEAR_IDLEFLAG(handle);
-
-        // Set RX timeout event
-        event |= USART_EVENT_RX_TIMEOUT;
-    }
-
-    // Transmit data register empty
-    if ((__HAL_UART_GET_IT_SOURCE(handle, UART_IT_TXE) != RESET) && \
-        (__HAL_UART_GET_FLAG(handle, UART_FLAG_TXE) != RESET)) {
-        if (obj->data.tx_num != obj->data.tx_count) {
-            // Write data to TX FIFO
-            data = *(obj->data.tx_buffer++);
-
-            // If nine bits data and no parity, write the 10th bit
-            if ((handle->Init.WordLength == UART_WORDLENGTH_9B) && \
-                (handle->Init.Parity == UART_PARITY_NONE)) {
-                data |= (*(obj->data.tx_buffer++) << 8);
-            }
-        }
-        obj->data.tx_count++;
-
-        // Write to data register
-        handle->Instance->DR = data;
-
-        // Check if all data has been sent
-        if (obj->data.tx_count == obj->data.tx_num) {
-            // Disable TXE interrupt
-            ATOMIC_CLEAR_BIT(handle->Instance->CR1, USART_CR1_TXEIE);
-
-            // Enable TC interrupt
-            ATOMIC_SET_BIT(handle->Instance->CR1, USART_CR1_TCIE);
-
-            obj->status.tx_busy = 0;
-
-            // Set Send complete event
-            event |= USART_EVENT_SEND_COMPLETE;
-        }
-    }
-
-    // TX complete
-    if ((__HAL_UART_GET_IT_SOURCE(handle, UART_IT_TC) != RESET) && \
-        (__HAL_UART_GET_FLAG(handle, UART_FLAG_TC) != RESET)) {
-
-        // Disable TC interrupt
-        ATOMIC_CLEAR_BIT(handle->Instance->CR1, USART_CR1_TCIE);
-
-        obj->status.tx_busy = 0;
-
-        // Set TX complete event
-        event |= USART_EVENT_TX_COMPLETE;
-    }
-
-    // RX overrun error
-    if (__HAL_UART_GET_FLAG(handle, UART_FLAG_ORE) != RESET) {
-        obj->error.rx_overflow = 1;
-        // Set RX overflow event
-        event |= USART_EVENT_RX_OVERFLOW;
-    }
-
-    // RX framing error
-    if (__HAL_UART_GET_FLAG(handle, UART_FLAG_FE) != RESET) {
-        obj->error.rx_framing_error = 1;
-        // Set RX framing error event
-        event |= USART_EVENT_RX_FRAMING_ERROR;
-    }
-
-    // RX parity error
-    if (__HAL_UART_GET_FLAG(handle, UART_FLAG_PE) != RESET) {
-        obj->error.rx_parity_error = 1;
-        // Set RX parity error event
-        event |= USART_EVENT_RX_PARITY_ERROR;
-    }
-
-    if (obj->error.rx_overflow || obj->error.rx_framing_error || \
-        obj->error.rx_parity_error) {
-        // Disable parity , framing , overrun and idle flag
-        __HAL_UART_CLEAR_PEFLAG(handle);
-    }
-
-    // Send event
-    if ((obj->event_cb != NULL) && (event != 0)) {
-        obj->event_cb(event);
-    }
+    HAL_UART_IRQHandler(handle);
 }
 
 #if (CONFIG_USART_NUM_1 == 1)
@@ -982,64 +808,6 @@ static void usart_hal_irq_register(void) {
 #endif /* (CONFIG_USART_NUM_10 == 1) */
 }
 
-/********************* DMA callback functions **********************/
-static void usart_tx_dma_event_callback(DMA_HandleTypeDef *hdma) {
-    UART_HandleTypeDef *huart = (UART_HandleTypeDef *)((DMA_HandleTypeDef *)hdma)->Parent;
-    usart_obj_t *obj = usart_hal_get_obj(huart);
-    omni_assert_not_null(obj);
-
-    /* DMA Normal mode*/
-#if defined(CONFIG_SOC_FAMILY_STM32F1XX)
-    if ((hdma->Instance->CCR & DMA_CCR_CIRC) == 0U) {
-#else
-    if ((hdma->Instance->CR & DMA_SxCR_CIRC) == 0U) {
-#endif /* CONFIG_SOC_FAMILY_STM32F1XX */
-        obj->data.tx_count = 0;
-
-        /* Disable the DMA transfer for transmit request by setting the DMAT bit
-        in the UART CR3 register */
-        ATOMIC_CLEAR_BIT(huart->Instance->CR3, USART_CR3_DMAT);
-
-        /* Enable the UART Transmit Complete Interrupt */
-        ATOMIC_SET_BIT(huart->Instance->CR1, USART_CR1_TCIE);
-    } else {
-        if (obj->event_cb != NULL) {
-            obj->event_cb(USART_EVENT_SEND_COMPLETE);
-        }
-    }
-}
-
-static void usart_rx_dma_event_callback(DMA_HandleTypeDef *hdma) {
-    UART_HandleTypeDef *huart = (UART_HandleTypeDef *)((DMA_HandleTypeDef *)hdma)->Parent;
-    usart_obj_t *obj = usart_hal_get_obj(huart);
-    omni_assert_not_null(obj);
-
-    /* DMA Normal mode*/
-#if defined(CONFIG_SOC_FAMILY_STM32F1XX)
-    if ((hdma->Instance->CCR & DMA_CCR_CIRC) == 0U) {
-#else
-    if ((hdma->Instance->CR & DMA_SxCR_CIRC) == 0U) {
-#endif /* CONFIG_SOC_FAMILY_STM32F1XX */
-        obj->data.rx_count = 0;
-
-        /* Disable the DMA transfer for the receiver request by setting the DMAR bit
-        in the UART CR3 register */
-        ATOMIC_CLEAR_BIT(huart->Instance->CR3, USART_CR3_DMAR);
-
-        // Disable IDLE interrupt
-        ATOMIC_CLEAR_BIT(huart->Instance->CR1, USART_CR1_IDLEIE);
-
-        obj->status.rx_busy = 0;
-
-        // Enable RXNE interrupt
-        ATOMIC_SET_BIT(huart->Instance->CR1, USART_CR1_RXNEIE);
-    }
-
-    if (obj->event_cb != NULL) {
-        obj->event_cb(USART_EVENT_RECEIVE_COMPLETE);
-    }
-}
-
 /********************* Callback functions **********************/
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     usart_obj_t *obj = usart_hal_get_obj(huart);
@@ -1088,7 +856,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart) {
     }
 }
 
-/********************* HAL functions **********************/
+/********************* Private functions **********************/
 
 /**
  * @brief Set GPIO for USART
@@ -1106,37 +874,21 @@ static void usart_hal_set_gpio(usart_dev_t *dev) {
         gpio_hal_enable_clock(dev->rx_pin->ins);
     }
 
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
 
     if (dev->tx_pin != NULL) {
         GPIO_InitStruct.Pin = dev->tx_pin->index;
-        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-#if defined(CONFIG_SOC_FAMILY_STM32F4XX)
         GPIO_InitStruct.Alternate = dev->tx_pin->alternate;
-#endif /* CONFIG_SOC_FAMILY_STM32F4XX */
         HAL_GPIO_Init(dev->tx_pin->ins, &GPIO_InitStruct);
     }
 
     if (dev->rx_pin != NULL) {
         GPIO_InitStruct.Pin = dev->rx_pin->index;
-#if defined(CONFIG_SOC_FAMILY_STM32F1XX)
-        GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-#else
-        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-#endif /* CONFIG_SOC_FAMILY_STM32F1XX */
-#if defined(CONFIG_SOC_FAMILY_STM32F4XX)
         GPIO_InitStruct.Alternate = dev->rx_pin->alternate;
-#endif /* CONFIG_SOC_FAMILY_STM32F4XX */
         HAL_GPIO_Init(dev->rx_pin->ins, &GPIO_InitStruct);
     }
-
-#if defined(CONFIG_SOC_FAMILY_STM32F1XX)
-    // Remap GPIO
-    if (dev->alternate != AFIO_UNAVAILABLE_REMAP) {
-        gpio_hal_alternate(dev->alternate);
-    }
-#endif /* CONFIG_SOC_FAMILY_STM32F1XX */
 }
 
 /**

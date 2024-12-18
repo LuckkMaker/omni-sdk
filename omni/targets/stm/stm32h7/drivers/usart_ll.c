@@ -30,7 +30,7 @@ static gpio_pin_t usart1_tx_pin = { CONFIG_USART1_TX_PORT, CONFIG_USART1_TX_PIN,
 static DMA_HandleTypeDef usart1_tx_dma_handle = {
     .Instance = CONFIG_USART1_TX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART1_TX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_USART1_TX,
         .Direction = DMA_MEMORY_TO_PERIPH,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -58,7 +58,7 @@ static gpio_pin_t usart1_rx_pin = { CONFIG_USART1_RX_PORT, CONFIG_USART1_RX_PIN,
 static DMA_HandleTypeDef usart1_rx_dma_handle = {
     .Instance = CONFIG_USART1_RX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART1_RX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_USART1_RX,
         .Direction = DMA_PERIPH_TO_MEMORY,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -108,7 +108,7 @@ static gpio_pin_t usart2_tx_pin = { CONFIG_USART2_TX_PORT, CONFIG_USART2_TX_PIN,
 static DMA_HandleTypeDef usart2_tx_dma_handle = {
     .Instance = CONFIG_USART2_TX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART2_TX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_USART2_TX,
         .Direction = DMA_MEMORY_TO_PERIPH,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -136,7 +136,7 @@ static gpio_pin_t usart2_rx_pin = { CONFIG_USART2_RX_PORT, CONFIG_USART2_RX_PIN,
 static DMA_HandleTypeDef usart2_rx_dma_handle = {
     .Instance = CONFIG_USART2_RX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART2_RX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_USART2_RX,
         .Direction = DMA_PERIPH_TO_MEMORY,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -186,7 +186,7 @@ static gpio_pin_t usart3_tx_pin = { CONFIG_USART3_TX_PORT, CONFIG_USART3_TX_PIN,
 static DMA_HandleTypeDef usart3_tx_dma_handle = {
     .Instance = CONFIG_USART3_TX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART3_TX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_USART3_TX,
         .Direction = DMA_MEMORY_TO_PERIPH,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -214,7 +214,7 @@ static gpio_pin_t usart3_rx_pin = { CONFIG_USART3_RX_PORT, CONFIG_USART3_RX_PIN,
 static DMA_HandleTypeDef usart3_rx_dma_handle = {
     .Instance = CONFIG_USART3_RX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART3_RX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_USART3_RX,
         .Direction = DMA_PERIPH_TO_MEMORY,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -264,7 +264,7 @@ static gpio_pin_t usart4_tx_pin = { CONFIG_USART4_TX_PORT, CONFIG_USART4_TX_PIN,
 static DMA_HandleTypeDef usart4_tx_dma_handle = {
     .Instance = CONFIG_USART4_TX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART4_TX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_UART4_TX,
         .Direction = DMA_MEMORY_TO_PERIPH,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -292,7 +292,7 @@ static gpio_pin_t usart4_rx_pin = { CONFIG_USART4_RX_PORT, CONFIG_USART4_RX_PIN,
 static DMA_HandleTypeDef usart4_rx_dma_handle = {
     .Instance = CONFIG_USART4_RX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART4_RX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_UART4_RX,
         .Direction = DMA_PERIPH_TO_MEMORY,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -342,7 +342,7 @@ static gpio_pin_t usart5_tx_pin = { CONFIG_USART5_TX_PORT, CONFIG_USART5_TX_PIN,
 static DMA_HandleTypeDef usart5_tx_dma_handle = {
     .Instance = CONFIG_USART5_TX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART5_TX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_UART5_TX,
         .Direction = DMA_MEMORY_TO_PERIPH,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -370,7 +370,7 @@ static gpio_pin_t usart5_rx_pin = { CONFIG_USART5_RX_PORT, CONFIG_USART5_RX_PIN,
 static DMA_HandleTypeDef usart5_rx_dma_handle = {
     .Instance = CONFIG_USART5_RX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART5_RX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_UART5_RX,
         .Direction = DMA_PERIPH_TO_MEMORY,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -420,7 +420,7 @@ static gpio_pin_t usart6_tx_pin = { CONFIG_USART6_TX_PORT, CONFIG_USART6_TX_PIN,
 static DMA_HandleTypeDef usart6_tx_dma_handle = {
     .Instance = CONFIG_USART6_TX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART6_TX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_USART6_TX,
         .Direction = DMA_MEMORY_TO_PERIPH,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -448,7 +448,7 @@ static gpio_pin_t usart6_rx_pin = { CONFIG_USART6_RX_PORT, CONFIG_USART6_RX_PIN,
 static DMA_HandleTypeDef usart6_rx_dma_handle = {
     .Instance = CONFIG_USART6_RX_DMA_STREAM,
     .Init = {
-        .Channel = CONFIG_USART6_RX_DMA_CHANNEL,
+        .Request = DMA_REQUEST_USART6_RX,
         .Direction = DMA_PERIPH_TO_MEMORY,
         .PeriphInc = DMA_PINC_DISABLE,
         .MemInc = DMA_MINC_ENABLE,
@@ -491,6 +491,162 @@ static usart_dev_t usart6_dev = {
 #endif /* (CONFIG_USART6_RX_DMA == 1) */
 };
 #endif /* USART6 && (CONFIG_USART_NUM_6 == 1) */
+#if defined(UART7) && (CONFIG_USART_NUM_7 == 1)
+#if (CONFIG_USART7_TX_DEF == 1)
+static gpio_pin_t usart7_tx_pin = { CONFIG_USART7_TX_PORT, CONFIG_USART7_TX_PIN, CONFIG_USART7_TX_AF };
+#if (CONFIG_USART7_TX_DMA == 1)
+static DMA_HandleTypeDef usart7_tx_dma_handle = {
+    .Instance = CONFIG_USART7_TX_DMA_STREAM,
+    .Init = {
+        .Request = DMA_REQUEST_UART7_TX,
+        .Direction = DMA_MEMORY_TO_PERIPH,
+        .PeriphInc = DMA_PINC_DISABLE,
+        .MemInc = DMA_MINC_ENABLE,
+        .PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
+        .MemDataAlignment = DMA_MDATAALIGN_BYTE,
+        .Mode = DMA_NORMAL,
+        .Priority = CONFIG_USART7_TX_DMA_PRIORITY,
+        .FIFOMode = DMA_FIFOMODE_DISABLE,
+        .FIFOThreshold = DMA_FIFO_THRESHOLD_FULL,
+        .MemBurst = DMA_MBURST_SINGLE,
+        .PeriphBurst = DMA_PBURST_SINGLE,
+    },
+};
+static dma_dev_t usart7_tx_dma = {
+    .handle = &usart7_tx_dma_handle,
+    .ins = CONFIG_USART7_TX_DMA_INS,
+    .irq_num = CONFIG_USART7_TX_DMA_IRQ_NUM,
+    .irq_prio = CONFIG_USART7_TX_DMA_IRQ_PRIO,
+};
+#endif /* (CONFIG_USART7_TX_DMA == 1) */
+#endif /* (CONFIG_USART7_TX_DEF == 1) */
+#if (CONFIG_USART7_RX_DEF == 1)
+static gpio_pin_t usart7_rx_pin = { CONFIG_USART7_RX_PORT, CONFIG_USART7_RX_PIN, CONFIG_USART7_RX_AF };
+#if (CONFIG_USART7_RX_DMA == 1)
+static DMA_HandleTypeDef usart7_rx_dma_handle = {
+    .Instance = CONFIG_USART7_RX_DMA_STREAM,
+    .Init = {
+        .Request = DMA_REQUEST_UART7_RX,
+        .Direction = DMA_PERIPH_TO_MEMORY,
+        .PeriphInc = DMA_PINC_DISABLE,
+        .MemInc = DMA_MINC_ENABLE,
+        .PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
+        .MemDataAlignment = DMA_MDATAALIGN_BYTE,
+        .Mode = DMA_NORMAL,
+        .Priority = CONFIG_USART7_RX_DMA_PRIORITY,
+        .FIFOMode = DMA_FIFOMODE_DISABLE,
+        .FIFOThreshold = DMA_FIFO_THRESHOLD_FULL,
+        .MemBurst = DMA_MBURST_SINGLE,
+        .PeriphBurst = DMA_PBURST_SINGLE,
+    },
+};
+static dma_dev_t usart7_rx_dma = {
+    .handle = &usart7_rx_dma_handle,
+    .ins = CONFIG_USART7_RX_DMA_INS,
+    .irq_num = CONFIG_USART7_RX_DMA_IRQ_NUM,
+    .irq_prio = CONFIG_USART7_RX_DMA_IRQ_PRIO,
+};
+#endif /* (CONFIG_USART7_RX_DMA == 1) */
+#endif /* (CONFIG_USART7_RX_DEF == 1) */
+static UART_HandleTypeDef usart7_handle = {
+    .Instance = UART7
+};
+static usart_dev_t uart7_dev = {
+    .handle = &usart7_handle,
+    .irq_num = UART7_IRQn,
+    .irq_prio = CONFIG_USART7_IRQ_PRIO,
+#if (CONFIG_USART7_TX_DEF == 1)
+    .tx_pin = &usart7_tx_pin,
+#endif /* (CONFIG_USART7_TX_DEF == 1) */
+#if (CONFIG_USART7_RX_DEF == 1)
+    .rx_pin = &usart7_rx_pin,
+#endif /* (CONFIG_USART7_RX_DEF == 1) */
+#if (CONFIG_USART7_TX_DMA == 1)
+    .dma_tx = &usart7_tx_dma,
+#endif /* (CONFIG_USART7_TX_DMA == 1) */
+#if (CONFIG_USART7_RX_DMA == 1)
+    .dma_rx = &usart7_rx_dma,
+#endif /* (CONFIG_USART7_RX_DMA == 1) */
+};
+#endif /* UART7 && (CONFIG_USART_NUM_7 == 1) */
+#if defined(UART8) && (CONFIG_USART_NUM_8 == 1)
+#if (CONFIG_USART8_TX_DEF == 1)
+static gpio_pin_t usart8_tx_pin = { CONFIG_USART8_TX_PORT, CONFIG_USART8_TX_PIN, CONFIG_USART8_TX_AF };
+#if (CONFIG_USART8_TX_DMA == 1)
+static DMA_HandleTypeDef usart8_tx_dma_handle = {
+    .Instance = CONFIG_USART8_TX_DMA_STREAM,
+    .Init = {
+        .Request = DMA_REQUEST_UART8_TX,
+        .Direction = DMA_MEMORY_TO_PERIPH,
+        .PeriphInc = DMA_PINC_DISABLE,
+        .MemInc = DMA_MINC_ENABLE,
+        .PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
+        .MemDataAlignment = DMA_MDATAALIGN_BYTE,
+        .Mode = DMA_NORMAL,
+        .Priority = CONFIG_USART8_TX_DMA_PRIORITY,
+        .FIFOMode = DMA_FIFOMODE_DISABLE,
+        .FIFOThreshold = DMA_FIFO_THRESHOLD_FULL,
+        .MemBurst = DMA_MBURST_SINGLE,
+        .PeriphBurst = DMA_PBURST_SINGLE,
+    },
+};
+static dma_dev_t usart8_tx_dma = {
+    .handle = &usart8_tx_dma_handle,
+    .ins = CONFIG_USART8_TX_DMA_INS,
+    .irq_num = CONFIG_USART8_TX_DMA_IRQ_NUM,
+    .irq_prio = CONFIG_USART8_TX_DMA_IRQ_PRIO,
+};
+#endif /* (CONFIG_USART8_TX_DMA == 1) */
+#endif /* (CONFIG_USART8_TX_DEF == 1) */
+#if (CONFIG_USART8_RX_DEF == 1)
+static gpio_pin_t usart8_rx_pin = { CONFIG_USART8_RX_PORT, CONFIG_USART8_RX_PIN, CONFIG_USART8_RX_AF };
+#if (CONFIG_USART8_RX_DMA == 1)
+static DMA_HandleTypeDef usart8_rx_dma_handle = {
+    .Instance = CONFIG_USART8_RX_DMA_STREAM,
+    .Init = {
+        .Request = DMA_REQUEST_UART8_RX,
+        .Direction = DMA_PERIPH_TO_MEMORY,
+        .PeriphInc = DMA_PINC_DISABLE,
+        .MemInc = DMA_MINC_ENABLE,
+        .PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
+        .MemDataAlignment = DMA_MDATAALIGN_BYTE,
+        .Mode = DMA_NORMAL,
+        .Priority = CONFIG_USART8_RX_DMA_PRIORITY,
+        .FIFOMode = DMA_FIFOMODE_DISABLE,
+        .FIFOThreshold = DMA_FIFO_THRESHOLD_FULL,
+        .MemBurst = DMA_MBURST_SINGLE,
+        .PeriphBurst = DMA_PBURST_SINGLE,
+    },
+};
+static dma_dev_t usart8_rx_dma = {
+    .handle = &usart8_rx_dma_handle,
+    .ins = CONFIG_USART8_RX_DMA_INS,
+    .irq_num = CONFIG_USART8_RX_DMA_IRQ_NUM,
+    .irq_prio = CONFIG_USART8_RX_DMA_IRQ_PRIO,
+};
+#endif /* (CONFIG_USART8_RX_DMA == 1) */
+#endif /* (CONFIG_USART8_RX_DEF == 1) */
+static UART_HandleTypeDef usart8_handle = {
+    .Instance = UART8
+};
+static usart_dev_t uart8_dev = {
+    .handle = &usart8_handle,
+    .irq_num = UART8_IRQn,
+    .irq_prio = CONFIG_USART8_IRQ_PRIO,
+#if (CONFIG_USART8_TX_DEF == 1)
+    .tx_pin = &usart8_tx_pin,
+#endif /* (CONFIG_USART8_TX_DEF == 1) */
+#if (CONFIG_USART8_RX_DEF == 1)
+    .rx_pin = &usart8_rx_pin,
+#endif /* (CONFIG_USART8_RX_DEF == 1) */
+#if (CONFIG_USART8_TX_DMA == 1)
+    .dma_tx = &usart8_tx_dma,
+#endif /* (CONFIG_USART8_TX_DMA == 1) */
+#if (CONFIG_USART8_RX_DMA == 1)
+    .dma_rx = &usart8_rx_dma,
+#endif /* (CONFIG_USART8_RX_DMA == 1) */
+};
+#endif /* UART8 && (CONFIG_USART_NUM_8 == 1) */
 
 /**
  * @brief Get USART device information

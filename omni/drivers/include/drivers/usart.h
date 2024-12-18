@@ -109,14 +109,14 @@ typedef struct {
 } usart_obj_t;
 
 /**
- * @brief Open USART port
+ * @brief Initialize USART port
  */
-typedef int (*usart_open_t)(usart_num_t usart_num, usart_driver_config_t *config);
+typedef int (*usart_init_t)(usart_num_t usart_num, usart_driver_config_t *config);
 
 /**
- * @brief Close USART port
+ * @brief Deinitialize USART port
  */
-typedef int (*usart_close_t)(usart_num_t usart_num);
+typedef int (*usart_deinit_t)(usart_num_t usart_num);
 
 /**
  * @brief Start USART port
@@ -129,32 +129,32 @@ typedef void (*usart_start_t)(usart_num_t usart_num);
 typedef void (*usart_stop_t)(usart_num_t usart_num);
 
 /**
- * @brief Write data to USART with polling
+ * @brief Send data to USART with polling
  */
-typedef int (*usart_poll_write_t)(usart_num_t usart_num, const uint8_t *data, uint32_t len, uint32_t timeout);
+typedef int (*usart_poll_send_t)(usart_num_t usart_num, const uint8_t *data, uint32_t len, uint32_t timeout);
 
 /**
- * @brief Read data from USART with polling
+ * @brief Receive data from USART with polling
  */
-typedef int (*usart_poll_read_t)(usart_num_t usart_num, void *data, uint32_t len, uint32_t timeout);
+typedef int (*usart_poll_receive_t)(usart_num_t usart_num, void *data, uint32_t len, uint32_t timeout);
 
 /**
- * @brief Write data to USART port
+ * @brief Send data to USART port
  */
-typedef int (*usar_write_t)(usart_num_t usart_num, const uint8_t *data, uint32_t len);
+typedef int (*usar_send_t)(usart_num_t usart_num, const uint8_t *data, uint32_t len);
 
 /**
- * @brief Read data from USART port
+ * @brief Receive data from USART port
  */
-typedef int (*usart_read_t)(usart_num_t usart_num, void *data, uint32_t len);
+typedef int (*usart_receive_t)(usart_num_t usart_num, void *data, uint32_t len);
 
 /**
- * @brief Get USART driver status
+ * @brief Get USART port status
  */
 typedef usart_driver_status_t (*usart_get_status_t)(usart_num_t usart_num);
 
 /**
- * @brief Get USART driver error
+ * @brief Get USART port error
  */
 typedef usart_driver_error_t (*usart_get_error_t)(usart_num_t usart_num);
 
@@ -162,14 +162,14 @@ typedef usart_driver_error_t (*usart_get_error_t)(usart_num_t usart_num);
  * @brief USART driver API
  */
 struct usart_driver_api {
-    usart_open_t open;
-    usart_close_t close;
+    usart_init_t init;
+    usart_deinit_t deinit;
     usart_start_t start;
     usart_stop_t stop;
-    usart_poll_write_t poll_write;
-    usart_poll_read_t poll_read;
-    usar_write_t write;
-    usart_read_t read;
+    usart_poll_send_t poll_send;
+    usart_poll_receive_t poll_receive;
+    usar_send_t send;
+    usart_receive_t receive;
     usart_get_status_t get_status;
     usart_get_error_t get_error;
 };

@@ -1,5 +1,9 @@
 menu "Libraries"
 
+config LUA
+    bool "Lua"
+    default n
+
 config U8G2
     bool "U8g2"
     default n

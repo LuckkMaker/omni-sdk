@@ -21,8 +21,16 @@ add_library(omni-drivers INTERFACE)
 #     omni_add_configure_file(${DRIVER_CFG_SOURCE_FILE} ${DRIVER_CFG_TARGET_FILE})
 # endif()
 
-omni_lib_src_ifdef(CONFIG_OMNI_DRIVER omni-drivers init.c)
-omni_lib_src_ifdef(CONFIG_SSD1306 omni-drivers display/ssd1306.c)
+if(DEFINED CONFIG_OMNI_DRIVER)
+    file(GLOB DRIVER_SOURCES
+        "init.c"
+        "ipc/ring_buffer.c"
+    )
+endif()
+
+target_sources(omni-drivers INTERFACE
+    ${DRIVER_SOURCES}
+)
 
 target_include_directories(omni-drivers INTERFACE
     include

@@ -32,15 +32,15 @@ extern "C" {
 #endif
 
 /**
- * @brief Open clock driver
+ * @brief Initialize clock driver
  */
-typedef int (*clock_open_t)(void);
+typedef int (*clock_init_t)(void);
 
 /**
  * @brief Close clock driver
  */
 struct clock_driver_api {
-    clock_open_t open;
+    clock_init_t init;
 };
 
 extern const struct clock_driver_api clock_driver;

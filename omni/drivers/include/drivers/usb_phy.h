@@ -76,22 +76,22 @@ typedef struct {
 } usb_phy_obj_t;
 
 /**
- * @brief Open USB PHY driver
+ * @brief Initialize USB PHY
  */
-typedef int (*usb_phy_open_t)(usb_num_t usb_num, usb_phy_driver_config_t *config);
+typedef int (*usb_phy_init_t)(usb_num_t usb_num, usb_phy_driver_config_t *config);
 
 /**
- * @brief Close USB PHY driver
+ * @brief Deinitialize USB PHY
  */
-typedef int (*usb_phy_close_t)(usb_num_t usb_num);
+typedef int (*usb_phy_deinit_t)(usb_num_t usb_num);
 
 /**
- * @brief Start USB PHY driver
+ * @brief Start USB PHY
  */
 typedef void (*usb_phy_start_t)(usb_num_t usb_num);
 
 /**
- * @brief Stop USB PHY driver
+ * @brief Stop USB PHY
  */
 typedef void (*usb_phy_stop_t)(usb_num_t usb_num);
 
@@ -104,8 +104,8 @@ typedef usb_dev_t* (*usb_phy_get_dev_t)(usb_num_t usb_num);
  * @brief USB PHY driver API
  */
 struct usb_phy_driver_api {
-    usb_phy_open_t open;
-    usb_phy_close_t close;
+    usb_phy_init_t init;
+    usb_phy_deinit_t deinit;
     usb_phy_start_t start;
     usb_phy_stop_t stop;
     usb_phy_get_dev_t get_dev;

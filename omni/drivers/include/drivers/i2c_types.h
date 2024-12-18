@@ -86,7 +86,7 @@ typedef enum {
 } i2c_mem_addr_size_t;
 
 /**
- * @brief I2C port number
+ * @brief I2C bus number
  */
 typedef enum {
 #if (CONFIG_I2C_NUM_1 == 1)

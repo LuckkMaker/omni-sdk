@@ -116,22 +116,22 @@ typedef struct {
 } i2c_obj_t;
 
 /**
- * @brief Open I2C BUS
+ * @brief Initialize I2C bus
  */
-typedef int (*i2c_open_t)(i2c_num_t i2c_num, i2c_driver_config_t *config);
+typedef int (*i2c_init_t)(i2c_num_t i2c_num, i2c_driver_config_t *config);
 
 /**
- * @brief Close I2C BUS
+ * @brief Deinitialize I2C bus
  */
-typedef int (*i2c_close_t)(i2c_num_t i2c_num);
+typedef int (*i2c_deinit_t)(i2c_num_t i2c_num);
 
 /**
- * @brief Start I2C BUS
+ * @brief Start I2C bus
  */
 typedef void (*i2c_start_t)(i2c_num_t i2c_num);
 
 /**
- * @brief Stop I2C BUS
+ * @brief Stop I2C bus
  */
 typedef void (*i2c_stop_t)(i2c_num_t i2c_num);
 
@@ -166,17 +166,17 @@ typedef int (*i2c_write_t)(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_ad
 typedef int (*i2c_read_t)(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, uint8_t *data, uint16_t len);
 
 /**
- * @brief I2C is device ready
+ * @brief I2C bus is device ready
  */
 typedef int (*i2c_is_device_ready_t)(i2c_num_t i2c_num, uint16_t dev_addr, uint32_t trials);
 
 /**
- * @brief I2C get status
+ * @brief Get I2C bus status
  */
 typedef i2c_driver_status_t (*i2c_get_status_t)(i2c_num_t i2c_num);
 
 /**
- * @brief I2C get error
+ * @brief Get I2C bus error
  */
 typedef i2c_driver_error_t (*i2c_get_error_t)(i2c_num_t i2c_num);
 
@@ -184,8 +184,8 @@ typedef i2c_driver_error_t (*i2c_get_error_t)(i2c_num_t i2c_num);
  * @brief I2C driver API
  */
 struct i2c_driver_api {
-    i2c_open_t open;
-    i2c_close_t close;
+    i2c_init_t init;
+    i2c_deinit_t deinit;
     i2c_start_t start;
     i2c_stop_t stop;
     i2c_master_transmit_t master_transmit;

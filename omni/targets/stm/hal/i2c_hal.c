@@ -31,34 +31,34 @@
 
 static i2c_obj_t i2c_obj[I2C_NUM_MAX];
 
-static int i2c_open(i2c_num_t i2c_num, i2c_driver_config_t *config);
-static int i2c_close(i2c_num_t i2c_num);
-static void i2c_start(i2c_num_t i2c_num);
-static void i2c_stop(i2c_num_t i2c_num);
-static int i2c_master_transmit(i2c_num_t i2c_num, uint16_t addr, const uint8_t *data, uint32_t len, uint8_t pending);
-static int i2c_master_receive(i2c_num_t i2c_num, uint16_t addr, uint8_t *data, uint32_t len, uint8_t pending);
-static int i2c_slave_transmit(i2c_num_t i2c_num, const uint8_t *data, uint32_t len);
-static int i2c_slave_receive(i2c_num_t i2c_num, uint8_t *data, uint32_t len);
-static int i2c_write(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, const uint8_t *data, uint16_t len);
-static int i2c_read(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, uint8_t *data, uint16_t len);
-static int i2c_is_device_ready(i2c_num_t i2c_num, uint16_t dev_addr, uint32_t trials);
-static i2c_driver_status_t i2c_get_status(i2c_num_t i2c_num);
-static i2c_driver_error_t i2c_get_error(i2c_num_t i2c_num);
+static int i2c_hal_init(i2c_num_t i2c_num, i2c_driver_config_t *config);
+static int i2c_hal_deinit(i2c_num_t i2c_num);
+static void i2c_hal_start(i2c_num_t i2c_num);
+static void i2c_hal_stop(i2c_num_t i2c_num);
+static int i2c_hal_master_transmit(i2c_num_t i2c_num, uint16_t addr, const uint8_t *data, uint32_t len, uint8_t pending);
+static int i2c_hal_master_receive(i2c_num_t i2c_num, uint16_t addr, uint8_t *data, uint32_t len, uint8_t pending);
+static int i2c_hal_slave_transmit(i2c_num_t i2c_num, const uint8_t *data, uint32_t len);
+static int i2c_hal_slave_receive(i2c_num_t i2c_num, uint8_t *data, uint32_t len);
+static int i2c_hal_write(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, const uint8_t *data, uint16_t len);
+static int i2c_hal_read(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, uint8_t *data, uint16_t len);
+static int i2c_hal_is_device_ready(i2c_num_t i2c_num, uint16_t dev_addr, uint32_t trials);
+static i2c_driver_status_t i2c_hal_get_status(i2c_num_t i2c_num);
+static i2c_driver_error_t i2c_hal_get_error(i2c_num_t i2c_num);
 
 const struct i2c_driver_api i2c_driver = {
-    .open = i2c_open,
-    .close = i2c_close,
-    .start = i2c_start,
-    .stop = i2c_stop,
-    .master_transmit = i2c_master_transmit,
-    .master_receive = i2c_master_receive,
-    .slave_transmit = i2c_slave_transmit,
-    .slave_receive = i2c_slave_receive,
-    .write = i2c_write,
-    .read = i2c_read,
-    .is_device_ready = i2c_is_device_ready,
-    .get_status = i2c_get_status,
-    .get_error = i2c_get_error,
+    .init = i2c_hal_init,
+    .deinit = i2c_hal_deinit,
+    .start = i2c_hal_start,
+    .stop = i2c_hal_stop,
+    .master_transmit = i2c_hal_master_transmit,
+    .master_receive = i2c_hal_master_receive,
+    .slave_transmit = i2c_hal_slave_transmit,
+    .slave_receive = i2c_hal_slave_receive,
+    .write = i2c_hal_write,
+    .read = i2c_hal_read,
+    .is_device_ready = i2c_hal_is_device_ready,
+    .get_status = i2c_hal_get_status,
+    .get_error = i2c_hal_get_error,
 };
 
 static void i2c_hal_irq_register(void);
@@ -77,7 +77,7 @@ static i2c_obj_t *i2c_hal_get_obj(I2C_HandleTypeDef *hi2c);
  * @param config Pointer to the I2C driver configuration
  * @return Operation status
  */
-static int i2c_open(i2c_num_t i2c_num, i2c_driver_config_t *config) {
+static int i2c_hal_init(i2c_num_t i2c_num, i2c_driver_config_t *config) {
     omni_assert(i2c_num < I2C_NUM_MAX);
     omni_assert_not_null(config);
 
@@ -216,7 +216,7 @@ static int i2c_open(i2c_num_t i2c_num, i2c_driver_config_t *config) {
  * @param i2c_num I2C number
  * @return Operation status
  */
-static int i2c_close(i2c_num_t i2c_num) {
+static int i2c_hal_deinit(i2c_num_t i2c_num) {
     omni_assert(i2c_num < I2C_NUM_MAX);
 
     i2c_obj_t *obj = &i2c_obj[i2c_num];
@@ -278,7 +278,7 @@ static int i2c_close(i2c_num_t i2c_num) {
  * 
  * @param i2c_num I2C number
  */
-static void i2c_start(i2c_num_t i2c_num) {
+static void i2c_hal_start(i2c_num_t i2c_num) {
     omni_assert(i2c_num < I2C_NUM_MAX);
 
     i2c_obj_t *obj = &i2c_obj[i2c_num];
@@ -295,7 +295,7 @@ static void i2c_start(i2c_num_t i2c_num) {
  * 
  * @param i2c_num I2C number
  */
-static void i2c_stop(i2c_num_t i2c_num) {
+static void i2c_hal_stop(i2c_num_t i2c_num) {
     omni_assert(i2c_num < I2C_NUM_MAX);
 
     i2c_obj_t *obj = &i2c_obj[i2c_num];
@@ -316,7 +316,7 @@ static void i2c_stop(i2c_num_t i2c_num) {
  * @param len Data length
  * @return Operation status
  */
-static int i2c_master_transmit(i2c_num_t i2c_num, uint16_t addr, const uint8_t *data, uint32_t len, uint8_t pending) {
+static int i2c_hal_master_transmit(i2c_num_t i2c_num, uint16_t addr, const uint8_t *data, uint32_t len, uint8_t pending) {
     HAL_StatusTypeDef status;
     uint16_t addr_temp;
     uint32_t option;
@@ -385,7 +385,7 @@ static int i2c_master_transmit(i2c_num_t i2c_num, uint16_t addr, const uint8_t *
  * @param pending Pending flag
  * @return Operation status
  */
-static int i2c_master_receive(i2c_num_t i2c_num, uint16_t addr, uint8_t *data, uint32_t len, uint8_t pending) {
+static int i2c_hal_master_receive(i2c_num_t i2c_num, uint16_t addr, uint8_t *data, uint32_t len, uint8_t pending) {
     HAL_StatusTypeDef status;
     uint16_t addr_temp;
     uint32_t option;
@@ -452,7 +452,7 @@ static int i2c_master_receive(i2c_num_t i2c_num, uint16_t addr, uint8_t *data, u
  * @param len Data length
  * @return Operation status
  */
-static int i2c_slave_transmit(i2c_num_t i2c_num, const uint8_t *data, uint32_t len) {
+static int i2c_hal_slave_transmit(i2c_num_t i2c_num, const uint8_t *data, uint32_t len) {
     HAL_StatusTypeDef status;
     omni_assert(i2c_num < I2C_NUM_MAX);
     omni_assert_not_null(data);
@@ -507,7 +507,7 @@ static int i2c_slave_transmit(i2c_num_t i2c_num, const uint8_t *data, uint32_t l
  * @param len Data length
  * @return Operation status
  */
-static int i2c_slave_receive(i2c_num_t i2c_num, uint8_t *data, uint32_t len) {
+static int i2c_hal_slave_receive(i2c_num_t i2c_num, uint8_t *data, uint32_t len) {
     HAL_StatusTypeDef status;
     omni_assert(i2c_num < I2C_NUM_MAX);
     omni_assert_not_null(data);
@@ -561,7 +561,7 @@ static int i2c_slave_receive(i2c_num_t i2c_num, uint8_t *data, uint32_t len) {
  * @param len Data length
  * @return Operation status
  */
-static int i2c_write(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, const uint8_t *data, uint16_t len) {
+static int i2c_hal_write(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, const uint8_t *data, uint16_t len) {
     HAL_StatusTypeDef status;
     uint16_t addr_temp;
     uint32_t mem_addr_temp;
@@ -620,7 +620,7 @@ static int i2c_write(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2
  * @param len Data length
  * @return Operation status
  */
-static int i2c_read(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, uint8_t *data, uint16_t len) {
+static int i2c_hal_read(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c_mem_addr_size_t mem_addr_size, uint8_t *data, uint16_t len) {
     HAL_StatusTypeDef status;
     uint16_t addr_temp;
     uint32_t mem_addr_temp;
@@ -676,7 +676,7 @@ static int i2c_read(i2c_num_t i2c_num, uint16_t dev_addr, uint16_t mem_addr, i2c
  * @param trials Number of trials
  * @return Operation status
  */
-static int i2c_is_device_ready(i2c_num_t i2c_num, uint16_t dev_addr, uint32_t trials) {
+static int i2c_hal_is_device_ready(i2c_num_t i2c_num, uint16_t dev_addr, uint32_t trials) {
     uint16_t addr_temp;
     omni_assert(i2c_num < I2C_NUM_MAX);
 
@@ -716,7 +716,7 @@ static int i2c_is_device_ready(i2c_num_t i2c_num, uint16_t dev_addr, uint32_t tr
  * @param i2c_num I2C number
  * @return I2C driver status
  */
-static i2c_driver_status_t i2c_get_status(i2c_num_t i2c_num) {
+static i2c_driver_status_t i2c_hal_get_status(i2c_num_t i2c_num) {
     omni_assert(i2c_num < I2C_NUM_MAX);
 
     i2c_obj_t *obj = &i2c_obj[i2c_num];
@@ -731,7 +731,7 @@ static i2c_driver_status_t i2c_get_status(i2c_num_t i2c_num) {
  * @param i2c_num I2C number
  * @return I2C driver error
  */
-static i2c_driver_error_t i2c_get_error(i2c_num_t i2c_num) {
+static i2c_driver_error_t i2c_hal_get_error(i2c_num_t i2c_num) {
     omni_assert(i2c_num < I2C_NUM_MAX);
 
     i2c_obj_t *obj = &i2c_obj[i2c_num];

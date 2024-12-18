@@ -1,0 +1,9 @@
+menuconfig OMNI_DRIVER_IPC
+    bool "IPC"
+    default n
+    help
+        Enable the IPC driver configuration.
+
+if OMNI_DRIVER_IPC
+
+endif # OMNI_DRIVER_IPC
