@@ -1,0 +1,167 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "STM32F407IG with DAP-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F407IG",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f407xx.svd",
+            "configFiles": ["interface/cmsis-dap.cfg", "target/stm32f4x.cfg"],
+            "runToEntryPoint": "main",
+            //"preLaunchTask": "DAP-Link Erase Chip"
+        },
+        {
+            "name": "STM32F407IG with DAP-Link pyOCD",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "pyocd",
+            "device": "stm32f407ig",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f407xx.svd",
+            "runToEntryPoint": "main",
+            //"preLaunchTask": "DAP-Link Erase Chip"
+        },
+        {
+            "name": "STM32F103ZE with J-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F103ZE",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f103xx.svd",
+            "runToEntryPoint": "main",
+            // "serialNumber": "150710803", //jlink serial number
+            // "preLaunchTask": "J-Link Erase Chip"
+        },
+        {
+            "name": "STM32F407IG with J-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F407IG",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f407xx.svd",
+            "runToEntryPoint": "main",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+            // "serialNumber": "150710803", //jlink serial number
+            // "preLaunchTask": "J-Link Erase Chip"
+        },
+        {
+            "name": "APM32F407IG with J-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "APM32F407IG",
+            "interface": "swd",
+            "svdFile": "./tools/svd/apm32f407xx.svd",
+            "runToEntryPoint": "main",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+            // "serialNumber": "150710803", //jlink serial number
+            // "preLaunchTask": "J-Link Erase Chip"
+        },
+        {
+            "name": "STM32F411CE with J-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32F411CE",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f411xx.svd",
+            "runToEntryPoint": "main",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+        },
+        {
+            "name": "STM32H750VB with J-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32H750VB",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32h750xx.svd",
+            "runToEntryPoint": "main",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+        },
+        {
+            "name": "STM32H743II with J-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32H743II",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32h743xx.svd",
+            "runToEntryPoint": "main",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+        },
+        {
+            "name": "STM32F407IG with ST-Link",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/omni.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F407IG",
+            "interface": "swd",
+            "svdFile": "./tools/svd/stm32f407xx.svd",
+            "runToEntryPoint": "main",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32f4x.cfg"
+            ],
+            // "preLaunchTask": "ST-Link Erase Chip"
+        },
+        {
+            "name": "Ceedling debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/test/build/test/out/test_gpio.out",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/test",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+              {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+              }
+            ]
+        }
+    ]
+}
+
