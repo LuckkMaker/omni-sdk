@@ -37,7 +37,7 @@ void interrupt_init(void);
 void device_init(void);
 void power_init(void);
 void watchdog_init(void);
-void error_handler(void);
+void error_handler(char *file, uint32_t line);
 
 #ifdef __cplusplus
 }

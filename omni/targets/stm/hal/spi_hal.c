@@ -38,6 +38,7 @@ static void spi_hal_start(spi_num_t spi_num);
 static void spi_hal_stop(spi_num_t spi_num);
 static int spi_hal_send(spi_num_t spi_num, const void *data, uint32_t len);
 static int spi_hal_receive(spi_num_t spi_num, void *data, uint32_t len);
+static int spi_hal_transfer(spi_num_t spi_num, const void *tx_data, void *rx_data, uint32_t len);
 static spi_driver_status_t spi_hal_get_status(spi_num_t spi_num);
 static spi_driver_error_t spi_hal_get_error(spi_num_t spi_num);
 
@@ -48,6 +49,7 @@ const struct spi_driver_api spi_driver = {
     .stop = spi_hal_stop,
     .send = spi_hal_send,
     .receive = spi_hal_receive,
+    .transfer = spi_hal_transfer,
     .get_status = spi_hal_get_status,
     .get_error = spi_hal_get_error,
 };
@@ -342,6 +344,60 @@ static int spi_hal_receive(spi_num_t spi_num, void *data, uint32_t len) {
     status = HAL_SPI_TransmitReceive_DMA(handle, (uint8_t *)data, (uint8_t *)data, (uint16_t)len);
 #else
     status = HAL_SPI_TransmitReceive_IT(handle, (uint8_t *)data, (uint8_t *)data, (uint16_t)len);
+#endif /* ((CONFIG_SPI_TX_DMA == 1) && (CONFIG_SPI_RX_DMA == 1)) */
+
+    // Convert HAL status to OMNI status
+    switch (status) {
+        case HAL_OK:
+            break;
+
+        case HAL_BUSY:
+            return OMNI_BUSY;
+
+        case HAL_ERROR:
+            obj->status.busy = 0;
+            return OMNI_FAIL;
+
+        default:
+            obj->status.busy = 0;
+            return OMNI_FAIL;
+    }
+
+    return OMNI_OK;
+}
+
+/**
+ * @brief Transfer data via SPI bus
+ * 
+ * @param spi_num SPI number
+ * @param tx_data Pointer to TX data buffer
+ * @param rx_data Pointer to RX data buffer
+ * @param len Length of data buffer
+ * @return Operation status
+ */
+static int spi_hal_transfer(spi_num_t spi_num, const void *tx_data, void *rx_data, uint32_t len) {
+    HAL_StatusTypeDef status;
+    omni_assert(spi_num < SPI_NUM_MAX);
+    omni_assert_not_null(tx_data);
+    omni_assert_not_null(rx_data);
+    omni_assert_non_zero(len);
+
+    spi_obj_t *obj = &spi_obj[spi_num];
+    omni_assert_not_null(obj);
+
+    SPI_HandleTypeDef *handle = obj->dev->handle;
+
+    if (obj->status.busy) {
+        return OMNI_BUSY;
+    }
+
+    // Set busy status
+    obj->status.busy = 1;
+
+#if ((CONFIG_SPI_TX_DMA == 1) && (CONFIG_SPI_RX_DMA == 1))
+    status = HAL_SPI_TransmitReceive_DMA(handle, (uint8_t *)tx_data, (uint8_t *)rx_data, (uint16_t)len);
+#else
+    status = HAL_SPI_TransmitReceive_IT(handle, (uint8_t *)tx_data, (uint8_t *)rx_data, (uint16_t)len);
 #endif /* ((CONFIG_SPI_TX_DMA == 1) && (CONFIG_SPI_RX_DMA == 1)) */
 
     // Convert HAL status to OMNI status

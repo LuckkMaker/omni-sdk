@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.26)
 
 # Set the board to be used for omni
-set(BOARD stm32h743ii)
+set(BOARD stm32f407ig)
 
 # omni settings need to be set before including omni
 find_package(OMNI REQUIRED HINTS $ENV{OMNI_BASE})

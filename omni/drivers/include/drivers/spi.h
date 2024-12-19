@@ -140,6 +140,11 @@ typedef int (*spi_send_t)(spi_num_t spi_num, const void *data, uint32_t len);
 typedef int (*spi_receive_t)(spi_num_t spi_num, void *data, uint32_t len);
 
 /**
+ * @brief Transfer data to SPI bus
+ */
+typedef int (*spi_transfer_t)(spi_num_t spi_num, const void *tx_data, void *rx_data, uint32_t len);
+
+/**
  * @brief Get SPI bus status
  */
 typedef spi_driver_status_t (*spi_get_status_t)(spi_num_t spi_num);
@@ -159,6 +164,7 @@ struct spi_driver_api {
     spi_stop_t stop;
     spi_send_t send;
     spi_receive_t receive;
+    spi_transfer_t transfer;
     spi_get_status_t get_status;
     spi_get_error_t get_error;
 };

@@ -40,7 +40,7 @@ void driver_init(void) {
 
     // Initialize clock
     if (clock_driver.init() != OMNI_OK) {
-        error_handler();
+        error_handler(__FILE__, __LINE__);
     }
 
     // Initialize watchdog
@@ -76,7 +76,10 @@ __weak void watchdog_init(void) {
 /**
  * @brief Error handler
  */
-__weak void error_handler(void) {
+__weak void error_handler(char *file, uint32_t line) {
+    UNUSED(file);
+    UNUSED(line);
+
     __disable_irq();
 
     while (1) {

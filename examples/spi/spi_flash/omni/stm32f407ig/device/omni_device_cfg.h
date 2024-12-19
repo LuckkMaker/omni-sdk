@@ -205,7 +205,7 @@ extern "C" {
 // <h> SPI (Serial peripheral interface)
 //  <e> SPI1
 //  <i> Configuration settings for OMNI Driver SPI
-#define CONFIG_SPI_NUM_1 0
+#define CONFIG_SPI_NUM_1 1
 //      <o> SPI1 Clock Frequency <1-999999999>
 #define CONFIG_SPI1_CLK_FREQ 84000000
 //      <o> SPI1 NSS Pin <0=>NC <1=>PA4 <2=>PA15
@@ -224,7 +224,7 @@ extern "C" {
 #define CONFIG_SPI1_NSS_AF GPIO_AF5_SPI1
 #endif /* CONFIG_SPI1_NSS_PIN_VAL */
 //      <o> SPI1 SCK Pin <0=>PA5 <1=>PB3
-#define CONFIG_SPI1_SCK_PIN_VAL 0
+#define CONFIG_SPI1_SCK_PIN_VAL 1
 #if (CONFIG_SPI1_SCK_PIN_VAL == 0)
 #define CONFIG_SPI1_SCK_DEF 1
 #define CONFIG_SPI1_SCK_PORT GPIOA
@@ -237,7 +237,7 @@ extern "C" {
 #define CONFIG_SPI1_SCK_AF GPIO_AF5_SPI1
 #endif /* CONFIG_SPI1_SCK_PIN_VAL */
 //      <o> SPI1 MISO Pin <0=>NC <1=>PA6 <2=>PB4
-#define CONFIG_SPI1_MISO_PIN_VAL 0
+#define CONFIG_SPI1_MISO_PIN_VAL 2
 #if (CONFIG_SPI1_MISO_PIN_VAL == 0)
 #define CONFIG_SPI1_MISO_DEF 0
 #elif (CONFIG_SPI1_MISO_PIN_VAL == 1)
@@ -252,7 +252,7 @@ extern "C" {
 #define CONFIG_SPI1_MISO_AF GPIO_AF5_SPI1
 #endif /* CONFIG_SPI1_MISO_PIN_VAL */
 //      <o> SPI1 MOSI Pin <0=>NC <1=>PA7 <2=>PB5
-#define CONFIG_SPI1_MOSI_PIN_VAL 0
+#define CONFIG_SPI1_MOSI_PIN_VAL 2
 #if (CONFIG_SPI1_MOSI_PIN_VAL == 0)
 #define CONFIG_SPI1_MOSI_DEF 0
 #elif (CONFIG_SPI1_MOSI_PIN_VAL == 1)
@@ -279,7 +279,7 @@ extern "C" {
 //      <o5> IRQ priority <0-15>
 //      <i> Select DMA IRQ priority
 //  </e>
-#define CONFIG_SPI1_TX_DMA 0
+#define CONFIG_SPI1_TX_DMA 1
 #define CONFIG_SPI1_TX_DMA_NUMBER 2
 #define CONFIG_SPI1_TX_DMA_INS DMA_INS(CONFIG_SPI1_TX_DMA_NUMBER)
 #define CONFIG_SPI1_TX_DMA_STREAM_NUM 3
@@ -301,7 +301,7 @@ extern "C" {
 //      <o5> IRQ priority <0-15>
 //      <i> Select DMA IRQ priority
 //  </e>
-#define CONFIG_SPI1_RX_DMA 0
+#define CONFIG_SPI1_RX_DMA 1
 #define CONFIG_SPI1_RX_DMA_NUMBER 2
 #define CONFIG_SPI1_RX_DMA_INS DMA_INS(CONFIG_SPI1_RX_DMA_NUMBER)
 #define CONFIG_SPI1_RX_DMA_STREAM_NUM 0

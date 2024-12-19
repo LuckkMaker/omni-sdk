@@ -72,7 +72,7 @@ extern "C" {
  */
 #define SPI_OP_DATA_SIZE_POS        5U                                                          /**< Data size position */
 #define SPI_OP_DATA_SIZE_MASK       (0x3FU << SPI_OP_DATA_SIZE_POS)                             /**< Data size mask */
-#define SPI_OP_DATA_SIZE_GET(opt)   ((opt) & SPI_OP_DATA_SIZE_MASK >> SPI_OP_DATA_SIZE_POS)     /**< Get data size */
+#define SPI_OP_DATA_SIZE_GET(opt)   (((opt) & SPI_OP_DATA_SIZE_MASK) >> SPI_OP_DATA_SIZE_POS)   /**< Get data size */
 #define SPI_OP_DATA_SIZE_SET(opt)   ((opt) << SPI_OP_DATA_SIZE_POS)                             /**< Set data size */
 
 /**
