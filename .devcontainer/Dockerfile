@@ -23,7 +23,7 @@ RUN set -eux \
 # Install packages
 RUN set -eux \
     && apt-get update && apt-get install -y \
-    build-essential git wget curl unzip tar xz-utils python3 openocd \
+    build-essential git wget curl unzip tar xz-utils python3 openocd clangd clang \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && exit 0
@@ -38,6 +38,12 @@ RUN set -eux \
     && ln -s /opt/cmake-3.28.5/bin/* /usr/local/bin \
     && cmake --version \
     && rm /tmp/cmake-install.sh
+
+# Install Ninja
+RUN set -eux \
+    && apt-get update && apt-get install -y ninja-build \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install ARM Toolchain
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then export ARM_ARCH=x86_64; \
