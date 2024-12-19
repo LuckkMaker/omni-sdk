@@ -85,8 +85,6 @@ static int spi_hal_init(spi_num_t spi_num, spi_driver_config_t *config) {
     obj->dev = spi_ll_get_dev(spi_num);
     omni_assert_not_null(obj->dev);
 
-    SPI_HandleTypeDef *handle = obj->dev->handle;
-
     // Clear status
     obj->status = (spi_driver_status_t){0};
 
@@ -114,7 +112,7 @@ static int spi_hal_init(spi_num_t spi_num, spi_driver_config_t *config) {
             return OMNI_FAIL;
         }
 
-        __HAL_LINKDMA(handle, hdmatx, *(obj->dev->dma_tx->handle));
+        __HAL_LINKDMA(obj->dev->handle, hdmatx, *(obj->dev->dma_tx->handle));
 
         // Enable DMA TX IRQ
         NVIC_ClearPendingIRQ(obj->dev->dma_tx->irq_num);
@@ -133,7 +131,7 @@ static int spi_hal_init(spi_num_t spi_num, spi_driver_config_t *config) {
             return OMNI_FAIL;
         }
 
-        __HAL_LINKDMA(handle, hdmarx, *(obj->dev->dma_rx->handle));
+        __HAL_LINKDMA(obj->dev->handle, hdmarx, *(obj->dev->dma_rx->handle));
 
         // Enable DMA RX IRQ
         NVIC_ClearPendingIRQ(obj->dev->dma_rx->irq_num);

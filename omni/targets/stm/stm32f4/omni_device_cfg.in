@@ -2,8 +2,8 @@
   * @file    omni_device_cfg.h
   * @author  LuckkMaker
   * @brief   OMNI device configuration for STM32F4 series
-  * @version 1.0.9
-  * @date    27-Nov-2024
+  * @version 1.0.10
+  * @date    19-12-2024
   * @attention
   *
   * Copyright (c) 2024 LuckkMaker
@@ -90,6 +90,20 @@ extern "C" {
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
 
 // <h> Interrupt Configuration
+//  <h> SPI Interrupt Priority
+//  <o> SPI1 IRQ Priority <0-15>
+#define CONFIG_SPI1_IRQ_PRIO 1
+//  <o> SPI2 IRQ Priority <0-15>
+#define CONFIG_SPI2_IRQ_PRIO 1
+//  <o> SPI3 IRQ Priority <0-15>
+#define CONFIG_SPI3_IRQ_PRIO 1
+//  <o> SPI4 IRQ Priority <0-15>
+#define CONFIG_SPI4_IRQ_PRIO 1
+//  <o> SPI5 IRQ Priority <0-15>
+#define CONFIG_SPI5_IRQ_PRIO 1
+//  <o> SPI6 IRQ Priority <0-15>
+#define CONFIG_SPI6_IRQ_PRIO 1
+//  </h>
 //  <h> USART Interrupt Priority
 //  <o> USART1 IRQ Priority <0-15>
 #define CONFIG_USART1_IRQ_PRIO 1
@@ -187,6 +201,134 @@ extern "C" {
 //  <o> APB2 Prescaler <1=>1 <2=>2 <4=>4 <8=>8 <16=>16
 #define CONFIG_APB2_PRESC APB2_DIV(2)
 // </h>
+
+// <h> SPI (Serial peripheral interface)
+//  <e> SPI1
+//  <i> Configuration settings for OMNI Driver SPI
+#define CONFIG_SPI_NUM_1 0
+//      <o> SPI1 Clock Frequency <1-999999999>
+#define CONFIG_SPI1_CLK_FREQ 1000000
+//      <o> SPI1 NSS Pin <0=>NC <1=>PA4 <2=>PA15
+#define CONFIG_SPI1_NSS_PIN_VAL 0
+#if (CONFIG_SPI1_NSS_PIN_VAL == 0)
+#define CONFIG_SPI1_NSS_DEF 0
+#elif (CONFIG_SPI1_NSS_PIN_VAL == 1)
+#define CONFIG_SPI1_NSS_DEF 1
+#define CONFIG_SPI1_NSS_PORT GPIOA
+#define CONFIG_SPI1_NSS_PIN GPIO_PIN_4
+#define CONFIG_SPI1_NSS_AF GPIO_AF5_SPI1
+#elif (CONFIG_SPI1_NSS_PIN_VAL == 2)
+#define CONFIG_SPI1_NSS_DEF 1
+#define CONFIG_SPI1_NSS_PORT GPIOA
+#define CONFIG_SPI1_NSS_PIN GPIO_PIN_15
+#define CONFIG_SPI1_NSS_AF GPIO_AF5_SPI1
+#endif /* CONFIG_SPI1_NSS_PIN_VAL */
+//      <o> SPI1 SCK Pin <0=>PA5 <1=>PB3
+#define CONFIG_SPI1_SCK_PIN_VAL 0
+#if (CONFIG_SPI1_SCK_PIN_VAL == 0)
+#define CONFIG_SPI1_SCK_DEF 1
+#define CONFIG_SPI1_SCK_PORT GPIOA
+#define CONFIG_SPI1_SCK_PIN GPIO_PIN_5
+#define CONFIG_SPI1_SCK_AF GPIO_AF5_SPI1
+#elif (CONFIG_SPI1_SCK_PIN_VAL == 1)
+#define CONFIG_SPI1_SCK_DEF 1
+#define CONFIG_SPI1_SCK_PORT GPIOB
+#define CONFIG_SPI1_SCK_PIN GPIO_PIN_3
+#define CONFIG_SPI1_SCK_AF GPIO_AF5_SPI1
+#endif /* CONFIG_SPI1_SCK_PIN_VAL */
+//      <o> SPI1 MISO Pin <0=>NC <1=>PA6 <2=>PB4
+#define CONFIG_SPI1_MISO_PIN_VAL 0
+#if (CONFIG_SPI1_MISO_PIN_VAL == 0)
+#define CONFIG_SPI1_MISO_DEF 0
+#elif (CONFIG_SPI1_MISO_PIN_VAL == 1)
+#define CONFIG_SPI1_MISO_DEF 1
+#define CONFIG_SPI1_MISO_PORT GPIOA
+#define CONFIG_SPI1_MISO_PIN GPIO_PIN_6
+#define CONFIG_SPI1_MISO_AF GPIO_AF5_SPI1
+#elif (CONFIG_SPI1_MISO_PIN_VAL == 2)
+#define CONFIG_SPI1_MISO_DEF 1
+#define CONFIG_SPI1_MISO_PORT GPIOB
+#define CONFIG_SPI1_MISO_PIN GPIO_PIN_4
+#define CONFIG_SPI1_MISO_AF GPIO_AF5_SPI1
+#endif /* CONFIG_SPI1_MISO_PIN_VAL */
+//      <o> SPI1 MOSI Pin <0=>NC <1=>PA7 <2=>PB5
+#define CONFIG_SPI1_MOSI_PIN_VAL 0
+#if (CONFIG_SPI1_MOSI_PIN_VAL == 0)
+#define CONFIG_SPI1_MOSI_DEF 0
+#elif (CONFIG_SPI1_MOSI_PIN_VAL == 1)
+#define CONFIG_SPI1_MOSI_DEF 1
+#define CONFIG_SPI1_MOSI_PORT GPIOA
+#define CONFIG_SPI1_MOSI_PIN GPIO_PIN_7
+#define CONFIG_SPI1_MOSI_AF GPIO_AF5_SPI1
+#elif (CONFIG_SPI1_MOSI_PIN_VAL == 2)
+#define CONFIG_SPI1_MOSI_DEF 1
+#define CONFIG_SPI1_MOSI_PORT GPIOB
+#define CONFIG_SPI1_MOSI_PIN GPIO_PIN_5
+#define CONFIG_SPI1_MOSI_AF GPIO_AF5_SPI1
+#endif /* CONFIG_SPI1_MOSI_PIN_VAL */
+//  <e> DMA TX
+//      <i> Enable DMA TX
+//      <o1> Number <2=>2
+//      <i> Select DMA number
+//      <o2> Stream <3=>3 <5=>5
+//      <i> Select DMA stream
+//      <o3> Channel <3=>3
+//      <i> Select DMA channel
+//      <o4> Priority <0=>Low <1=>Medium <2=>High <3=>Very High
+//      <i> Select DMA priority
+//      <o5> IRQ priority <0-15>
+//      <i> Select DMA IRQ priority
+//  </e>
+#define CONFIG_SPI1_TX_DMA 0
+#define CONFIG_SPI1_TX_DMA_NUMBER 2
+#define CONFIG_SPI1_TX_DMA_INS DMA_INS(CONFIG_SPI1_TX_DMA_NUMBER)
+#define CONFIG_SPI1_TX_DMA_STREAM_NUM 3
+#define CONFIG_SPI1_TX_DMA_STREAM DMA_STREAM(CONFIG_SPI1_TX_DMA_NUMBER, CONFIG_SPI1_TX_DMA_STREAM_NUM)
+#define CONFIG_SPI1_TX_DMA_CHANNEL DMA_CHANNEL(3)
+#define CONFIG_SPI1_TX_DMA_PRIORITY DMA_PRIORITY(0)
+#define CONFIG_SPI1_TX_DMA_IRQ_PRIO 1
+#define CONFIG_SPI1_TX_DMA_IRQ_NUM DMA_IRQ_NUM(CONFIG_SPI1_TX_DMA_NUMBER, CONFIG_SPI1_TX_DMA_STREAM_NUM)
+//  <e> DMA RX
+//      <i> Enable DMA RX
+//      <o1> Number <2=>2
+//      <i> Select DMA number
+//      <o2> Stream <0=>0 <2=>2
+//      <i> Select DMA stream
+//      <o3> Channel <3=>3
+//      <i> Select DMA channel
+//      <o4> Priority <0=>Low <1=>Medium <2=>High <3=>Very High
+//      <i> Select DMA priority
+//      <o5> IRQ priority <0-15>
+//      <i> Select DMA IRQ priority
+//  </e>
+#define CONFIG_SPI1_RX_DMA 0
+#define CONFIG_SPI1_RX_DMA_NUMBER 2
+#define CONFIG_SPI1_RX_DMA_INS DMA_INS(CONFIG_SPI1_RX_DMA_NUMBER)
+#define CONFIG_SPI1_RX_DMA_STREAM_NUM 0
+#define CONFIG_SPI1_RX_DMA_STREAM DMA_STREAM(CONFIG_SPI1_RX_DMA_NUMBER, CONFIG_SPI1_RX_DMA_STREAM_NUM)
+#define CONFIG_SPI1_RX_DMA_CHANNEL DMA_CHANNEL(3)
+#define CONFIG_SPI1_RX_DMA_PRIORITY DMA_PRIORITY(0)
+#define CONFIG_SPI1_RX_DMA_IRQ_PRIO 1
+#define CONFIG_SPI1_RX_DMA_IRQ_NUM DMA_IRQ_NUM(CONFIG_SPI1_RX_DMA_NUMBER, CONFIG_SPI1_RX_DMA_STREAM_NUM)
+// </e>
+// </h>
+
+#if ((CONFIG_SPI1_TX_DMA == 1) || \
+     (CONFIG_SPI2_TX_DMA == 1) || \
+     (CONFIG_SPI3_TX_DMA == 1) || \
+     (CONFIG_SPI4_TX_DMA == 1) || \
+     (CONFIG_SPI5_TX_DMA == 1) || \
+     (CONFIG_SPI6_TX_DMA == 1))
+#define CONFIG_SPI_TX_DMA 1
+#endif
+#if ((CONFIG_SPI1_RX_DMA == 1) || \
+     (CONFIG_SPI2_RX_DMA == 1) || \
+     (CONFIG_SPI3_RX_DMA == 1) || \
+     (CONFIG_SPI4_RX_DMA == 1) || \
+     (CONFIG_SPI5_RX_DMA == 1) || \
+     (CONFIG_SPI6_RX_DMA == 1))
+#define CONFIG_SPI_RX_DMA 1
+#endif
 
 // <h> USART (Universal synchronous asynchronous receiver transmitter)
 //  <e> USART1

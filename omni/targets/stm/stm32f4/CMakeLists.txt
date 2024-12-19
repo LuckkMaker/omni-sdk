@@ -20,6 +20,7 @@ add_library(omni-stm32f4 INTERFACE)
 
 # Add the ll drivers
 if(NOT ${CONFIG_OMNI_DRIVER} STREQUAL "")
+    omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_SPI omni-stm32f4 drivers/spi_ll.c)
     omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_I2C omni-stm32f4 drivers/i2c_ll.c)
     omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_USART omni-stm32f4 drivers/usart_ll.c)
     omni_lib_src_ifdef(CONFIG_OMNI_DRIVER_USB omni-stm32f4 drivers/usb_ll.c)
