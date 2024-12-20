@@ -134,6 +134,8 @@ int flash_init(flash_info_t *flash);
 void flash_read_device_id(flash_info_t *flash);
 void flash_chip_select(void);
 void flash_chip_deselect(void);
+int flash_write_enable(void);
+int flash_wait_for_write_complete(void);
 
 /**
  * @brief The application entry point.
@@ -264,6 +266,62 @@ void flash_chip_select(void) {
  */
 void flash_chip_deselect(void) {
     gpio_driver.set_level(SPI_CS_PIN, GPIO_LEVEL_HIGH);
+}
+
+/**
+ * @brief Enable the flash write
+ * 
+ * @return operation status
+ */
+int flash_write_enable(void) {
+    uint8_t tx_data = W25QXX_INS_WRITE_ENABLE;
+    uint8_t rx_data;
+
+    flash_chip_select();
+
+    spi_driver.transfer(FLASH_SPI_NUM, &tx_data, &rx_data, 1);
+
+    while (!(spi1_event & SPI_EVENT_TRANSFER_COMPLETE)) {
+        // Do something
+    }
+
+    flash_chip_deselect();
+
+    return 0;
+}
+
+/**
+ * @brief Wait for the flash write complete
+ * 
+ * @return operation status
+ */
+int flash_wait_for_write_complete(void) {
+    uint8_t tx_data = W25QXX_INS_READ_STATUS_REG1;
+    uint8_t rx_data;
+
+    flash_chip_select();
+
+    spi_driver.transfer(FLASH_SPI_NUM, &tx_data, &rx_data, 1);
+
+    while (!(spi1_event & SPI_EVENT_TRANSFER_COMPLETE)) {
+        // Do something
+    }
+
+    flash_chip_deselect();
+
+    while (rx_data & W25QXX_SR1_WEL) {
+        flash_chip_select();
+
+        spi_driver.transfer(FLASH_SPI_NUM, &tx_data, &rx_data, 1);
+
+        while (!(spi1_event & SPI_EVENT_TRANSFER_COMPLETE)) {
+            // Do something
+        }
+
+        flash_chip_deselect();
+    }
+
+    return 0;
 }
 
 /**
