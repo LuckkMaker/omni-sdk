@@ -211,19 +211,19 @@ __NO_RETURN void WAKEUP_PIN_IRQHandler              (void) __attribute__ ((weak,
 extern const VECTOR_TABLE_Type __VECTOR_TABLE[];
        const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE = {
 #if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-    (VECTOR_TABLE_Type)(&__INITIAL_SP),       /*     Initial Stack Pointer */
+    (VECTOR_TABLE_Type)(&__INITIAL_SP),  /*     Initial Stack Pointer */
 #else
-    (VECTOR_TABLE_Type)(&_estack),        /*     Initial Stack Pointer */
+    (VECTOR_TABLE_Type)(&_estack),       /*     Initial Stack Pointer */
 #endif
-    Reset_Handler,                        /*     Reset Handler */
-    NMI_Handler,                          /* -14 NMI Handler */
-    HardFault_Handler,                    /* -13 Hard Fault Handler */
-    MemManage_Handler,                    /* -12 MPU Fault Handler */
-    BusFault_Handler,                     /* -11 Bus Fault Handler */
-    UsageFault_Handler,                   /* -10 Usage Fault Handler */
-    0,                                    /*     Reserved */
-    0,                                    /*     Reserved */
-    0,                                    /*     Reserved */
+    Reset_Handler,                       /*     Reset Handler */
+    NMI_Handler,                         /* -14 NMI Handler */
+    HardFault_Handler,                   /* -13 Hard Fault Handler */
+    MemManage_Handler,                   /* -12 MPU Fault Handler */
+    BusFault_Handler,                    /* -11 Bus Fault Handler */
+    UsageFault_Handler,                  /* -10 Usage Fault Handler */
+    0,                                   /*     Reserved */
+    0,                                   /*     Reserved */
+    0,                                   /*     Reserved */
     0,                                   /*     Reserved */
     SVC_Handler,                         /*  -5 SVCall Handler */
     DebugMon_Handler,                    /*  -4 Debug Monitor Handler */

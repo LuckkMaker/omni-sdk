@@ -57,3 +57,11 @@ build/
 .config
 .config.old
 kconfigLog.txt
+
+# MDK
+*.scvd
+*.uvguix.*
+*.ini
+*.bin
+JLinkLog.txt
+DebugConfig/
