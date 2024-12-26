@@ -26,6 +26,10 @@
 /*---------------------------------------------------------------------------
   External References
  *---------------------------------------------------------------------------*/
+#if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+extern uint32_t __INITIAL_SP;
+extern __NO_RETURN void __PROGRAM_START(void);
+#else
 extern uint32_t _estack;
 extern uint32_t _sdata;
 extern uint32_t _edata;
@@ -34,6 +38,7 @@ extern uint32_t _sbss;
 extern uint32_t _ebss;
 
 extern void __libc_init_array(void);
+#endif /* defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050) */
 extern int main(void);
 /*---------------------------------------------------------------------------
   Internal References
@@ -130,7 +135,11 @@ __NO_RETURN void DMA2_Channel4_5_IRQHandler         (void) __attribute__ ((weak,
 // Note: The vector table is need a name of .vectors and placed in the linker script SECTIONS(CMSIS 6)
 extern const VECTOR_TABLE_Type __VECTOR_TABLE[];
        const VECTOR_TABLE_Type __VECTOR_TABLE[] __VECTOR_TABLE_ATTRIBUTE = {
+#if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+    (VECTOR_TABLE_Type)(&__INITIAL_SP),  /*     Initial Stack Pointer */
+#else
     (VECTOR_TABLE_Type)(&_estack),       /*     Initial Stack Pointer */
+#endif
     Reset_Handler,                       /*     Reset Handler */
     NMI_Handler,                         /* -14 NMI Handler */
     HardFault_Handler,                   /* -13 Hard Fault Handler */
@@ -222,6 +231,17 @@ extern const VECTOR_TABLE_Type __VECTOR_TABLE[];
  *---------------------------------------------------------------------------*/
 __NO_RETURN void Reset_Handler(void)
 {
+#if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
+    __set_PSP((uint32_t)(&__INITIAL_SP));
+
+    SystemInit();                    /* CMSIS System Initialization */
+
+#if defined(CONFIG_OMNI_DRIVER)
+    driver_init();                   /* Initialize drivers */
+#endif /* CONFIG_OMNI_DRIVER */
+
+    __PROGRAM_START();               /* Enter PreMain (C library entry point) */
+#else
     __set_MSP((uint32_t)(&_estack));
 
     /* Copy the data segment initializers from flash to SRAM */
@@ -254,6 +274,7 @@ __NO_RETURN void Reset_Handler(void)
     HardFault_Handler();             /* main() shouldn't return */
 
     while(1);                        /* Avoid compiler warning */
+#endif /* defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050) */
 }
 
 #if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
