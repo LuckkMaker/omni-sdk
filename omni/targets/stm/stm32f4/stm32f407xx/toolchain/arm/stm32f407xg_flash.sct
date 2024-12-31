@@ -1,4 +1,4 @@
-#! armclang -E --target=arm-arm-none-eabi -mcpu=cortex-m7 -xc
+#! armclang -E --target=arm-arm-none-eabi -mcpu=cortex-m4 -xc
 ; command above MUST be in first line (no comment above!)
 
 /*
@@ -12,16 +12,20 @@
 ; </h>
  *----------------------------------------------------------------------------*/
 #define __ROM_BASE      0x08000000
-#define __ROM_SIZE      0x00020000
+#define __ROM_SIZE      0x00100000
 
 /*--------------------- Embedded RAM Configuration ---------------------------
 ; <h> RAM Configuration
 ;   <o0> RAM Base Address    <0x0-0xFFFFFFFF:8>
 ;   <o1> RAM Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;   <o2> CCM RAM Base Address    <0x0-0xFFFFFFFF:8>
+;   <o3> CCM RAM Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
  *----------------------------------------------------------------------------*/
 #define __RAM_BASE      0x20000000
 #define __RAM_SIZE      0x00020000
+#define __CCMRAM_BASE   0x10000000
+#define __CCMRAM_SIZE   0x00010000
 
 /*--------------------- Stack / Heap Configuration ---------------------------
 ; <h> Stack / Heap Configuration
@@ -68,7 +72,7 @@ LR_ROM __RO_BASE __RO_SIZE  {                       ; load region size_region
    .ANY (+XO)
   }
 
-  RW_RAM_DTCM __RAM_BASE 0x400 {
+  RW_RAM_CCM __CCMRAM_BASE 0x400 {
     * (.vtable)
   }
 

@@ -35,6 +35,7 @@ omni_add_configure_file(${STARTUP_SOURCE_FILE} ${STARTUP_TARGET_FILE})
 if(DEFINED CONFIG_OMNI_DRIVER)
     omni_add_configure_file(${LS_SOURCE_FILE} ${LS_TARGET_FILE})
     omni_set_linker_file(omni-stm32f4 ${CONFIG_OMNI_BOARD} ${LS_TARGET_FILE})
+    omni_add_configure_file(${SCT_SOURCE_FILE} ${SCT_TARGET_FILE})
 endif()
 
 target_compile_definitions(omni-stm32f4 INTERFACE

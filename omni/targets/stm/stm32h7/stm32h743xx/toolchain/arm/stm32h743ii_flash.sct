@@ -36,8 +36,12 @@
 ;------------- <<< end of configuration section >>> ---------------------------
 */
 
+/*----------------------------------------------------------------------------
+  Vector Table base address definition
+ *----------------------------------------------------------------------------*/
 #define __VECTOR_BASE   __RAM_BASE + 0x400
 #define __VECTOR_SIZE   0x100
+
 
 /*----------------------------------------------------------------------------
   User Stack & Heap boundary definition
@@ -64,11 +68,11 @@ LR_ROM __RO_BASE __RO_SIZE  {                       ; load region size_region
    .ANY (+XO)
   }
 
-  RW_RAM_DTCM 0x20000000 0x400 {
+  RW_RAM_DTCM __RAM_BASE 0x400 {
     * (.vtable)
   }
 
-  RW_RAM __VECTOR_BASE (__RW_SIZE - 0x100)  {                     ; RW data
+  RW_RAM __VECTOR_BASE (__RW_SIZE - __VECTOR_SIZE)  {                     ; RW data
    .ANY (+RW +ZI)
   }
 

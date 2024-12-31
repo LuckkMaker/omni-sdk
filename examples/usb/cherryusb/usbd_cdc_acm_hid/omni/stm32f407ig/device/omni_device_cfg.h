@@ -2,8 +2,8 @@
   * @file    omni_device_cfg.h
   * @author  LuckkMaker
   * @brief   OMNI device configuration for STM32F4 series
-  * @version 1.0.5
-  * @date    11-Nov-2024
+  * @version 1.0.10
+  * @date    19-12-2024
   * @attention
   *
   * Copyright (c) 2024 LuckkMaker
@@ -53,12 +53,6 @@ extern "C" {
 #define PLL_SRC1            RCC_PLLSOURCE_HSE
 #define PLL_SRC(num)        PLL_SRC##num
 
-// OSC type
-#define OSC_TYPE_HSE        RCC_OSCILLATORTYPE_HSE
-#define OSC_TYPE_HSI        RCC_OSCILLATORTYPE_HSI
-#define OSC_TYPE_LSE        RCC_OSCILLATORTYPE_LSE
-#define OSC_TYPE_LSI        RCC_OSCILLATORTYPE_LSI
-
 // Get SYSCLK source
 #define SYSCLK_SRC0         RCC_SYSCLKSOURCE_HSI
 #define SYSCLK_SRC1         RCC_SYSCLKSOURCE_HSE
@@ -96,6 +90,20 @@ extern "C" {
 //-------- <<< Use Configuration Wizard in Context Menu >>> --------------------
 
 // <h> Interrupt Configuration
+//  <h> SPI Interrupt Priority
+//  <o> SPI1 IRQ Priority <0-15>
+#define CONFIG_SPI1_IRQ_PRIO 1
+//  <o> SPI2 IRQ Priority <0-15>
+#define CONFIG_SPI2_IRQ_PRIO 1
+//  <o> SPI3 IRQ Priority <0-15>
+#define CONFIG_SPI3_IRQ_PRIO 1
+//  <o> SPI4 IRQ Priority <0-15>
+#define CONFIG_SPI4_IRQ_PRIO 1
+//  <o> SPI5 IRQ Priority <0-15>
+#define CONFIG_SPI5_IRQ_PRIO 1
+//  <o> SPI6 IRQ Priority <0-15>
+#define CONFIG_SPI6_IRQ_PRIO 1
+//  </h>
 //  <h> USART Interrupt Priority
 //  <o> USART1 IRQ Priority <0-15>
 #define CONFIG_USART1_IRQ_PRIO 1
@@ -177,28 +185,6 @@ extern "C" {
 //  </e>
 // </h>
 
-#if (CONFIG_HSE_STATE != 0)
-#if (CONFIG_LSE_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSE | OSC_TYPE_LSE)
-#else
-#if (CONFIG_LSI_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSE | OSC_TYPE_LSI)
-#else
-#define CONFIG_OSC_TYPE OSC_TYPE_HSE
-#endif /* CONFIG_LSI_STATE */
-#endif /* CONFIG_LSE_STATE */
-#else
-#if (CONFIG_LSE_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSI | OSC_TYPE_LSE)
-#else
-#if (CONFIG_LSI_STATE != 0)
-#define CONFIG_OSC_TYPE (OSC_TYPE_HSI | OSC_TYPE_LSI)
-#else
-#define CONFIG_OSC_TYPE OSC_TYPE_HSI
-#endif /* CONFIG_LSI_STATE */
-#endif /* CONFIG_LSE_STATE */
-#endif /* CONFIG_HSE_STATE */
-
 // <h> Clock Configuration
 //  <o> Flash Latency <0-15>
 #define CONFIG_FLASH_LATENCY FLASH_LATENCY(5)
@@ -216,12 +202,140 @@ extern "C" {
 #define CONFIG_APB2_PRESC APB2_DIV(2)
 // </h>
 
+// <h> SPI (Serial peripheral interface)
+//  <e> SPI1
+//  <i> Configuration settings for OMNI Driver SPI
+#define CONFIG_SPI_NUM_1 0
+//      <o> SPI1 Clock Frequency <1-999999999>
+#define CONFIG_SPI1_CLK_FREQ 84000000
+//      <o> SPI1 NSS Pin <0=>NC <1=>PA4 <2=>PA15
+#define CONFIG_SPI1_NSS_PIN_VAL 0
+#if (CONFIG_SPI1_NSS_PIN_VAL == 0)
+#define CONFIG_SPI1_NSS_DEF 0
+#elif (CONFIG_SPI1_NSS_PIN_VAL == 1)
+#define CONFIG_SPI1_NSS_DEF 1
+#define CONFIG_SPI1_NSS_PORT GPIOA
+#define CONFIG_SPI1_NSS_PIN GPIO_PIN_4
+#define CONFIG_SPI1_NSS_AF GPIO_AF5_SPI1
+#elif (CONFIG_SPI1_NSS_PIN_VAL == 2)
+#define CONFIG_SPI1_NSS_DEF 1
+#define CONFIG_SPI1_NSS_PORT GPIOA
+#define CONFIG_SPI1_NSS_PIN GPIO_PIN_15
+#define CONFIG_SPI1_NSS_AF GPIO_AF5_SPI1
+#endif /* CONFIG_SPI1_NSS_PIN_VAL */
+//      <o> SPI1 SCK Pin <0=>PA5 <1=>PB3
+#define CONFIG_SPI1_SCK_PIN_VAL 0
+#if (CONFIG_SPI1_SCK_PIN_VAL == 0)
+#define CONFIG_SPI1_SCK_DEF 1
+#define CONFIG_SPI1_SCK_PORT GPIOA
+#define CONFIG_SPI1_SCK_PIN GPIO_PIN_5
+#define CONFIG_SPI1_SCK_AF GPIO_AF5_SPI1
+#elif (CONFIG_SPI1_SCK_PIN_VAL == 1)
+#define CONFIG_SPI1_SCK_DEF 1
+#define CONFIG_SPI1_SCK_PORT GPIOB
+#define CONFIG_SPI1_SCK_PIN GPIO_PIN_3
+#define CONFIG_SPI1_SCK_AF GPIO_AF5_SPI1
+#endif /* CONFIG_SPI1_SCK_PIN_VAL */
+//      <o> SPI1 MISO Pin <0=>NC <1=>PA6 <2=>PB4
+#define CONFIG_SPI1_MISO_PIN_VAL 0
+#if (CONFIG_SPI1_MISO_PIN_VAL == 0)
+#define CONFIG_SPI1_MISO_DEF 0
+#elif (CONFIG_SPI1_MISO_PIN_VAL == 1)
+#define CONFIG_SPI1_MISO_DEF 1
+#define CONFIG_SPI1_MISO_PORT GPIOA
+#define CONFIG_SPI1_MISO_PIN GPIO_PIN_6
+#define CONFIG_SPI1_MISO_AF GPIO_AF5_SPI1
+#elif (CONFIG_SPI1_MISO_PIN_VAL == 2)
+#define CONFIG_SPI1_MISO_DEF 1
+#define CONFIG_SPI1_MISO_PORT GPIOB
+#define CONFIG_SPI1_MISO_PIN GPIO_PIN_4
+#define CONFIG_SPI1_MISO_AF GPIO_AF5_SPI1
+#endif /* CONFIG_SPI1_MISO_PIN_VAL */
+//      <o> SPI1 MOSI Pin <0=>NC <1=>PA7 <2=>PB5
+#define CONFIG_SPI1_MOSI_PIN_VAL 0
+#if (CONFIG_SPI1_MOSI_PIN_VAL == 0)
+#define CONFIG_SPI1_MOSI_DEF 0
+#elif (CONFIG_SPI1_MOSI_PIN_VAL == 1)
+#define CONFIG_SPI1_MOSI_DEF 1
+#define CONFIG_SPI1_MOSI_PORT GPIOA
+#define CONFIG_SPI1_MOSI_PIN GPIO_PIN_7
+#define CONFIG_SPI1_MOSI_AF GPIO_AF5_SPI1
+#elif (CONFIG_SPI1_MOSI_PIN_VAL == 2)
+#define CONFIG_SPI1_MOSI_DEF 1
+#define CONFIG_SPI1_MOSI_PORT GPIOB
+#define CONFIG_SPI1_MOSI_PIN GPIO_PIN_5
+#define CONFIG_SPI1_MOSI_AF GPIO_AF5_SPI1
+#endif /* CONFIG_SPI1_MOSI_PIN_VAL */
+//  <e> DMA TX
+//      <i> Enable DMA TX
+//      <o1> Number <2=>2
+//      <i> Select DMA number
+//      <o2> Stream <3=>3 <5=>5
+//      <i> Select DMA stream
+//      <o3> Channel <3=>3
+//      <i> Select DMA channel
+//      <o4> Priority <0=>Low <1=>Medium <2=>High <3=>Very High
+//      <i> Select DMA priority
+//      <o5> IRQ priority <0-15>
+//      <i> Select DMA IRQ priority
+//  </e>
+#define CONFIG_SPI1_TX_DMA 0
+#define CONFIG_SPI1_TX_DMA_NUMBER 2
+#define CONFIG_SPI1_TX_DMA_INS DMA_INS(CONFIG_SPI1_TX_DMA_NUMBER)
+#define CONFIG_SPI1_TX_DMA_STREAM_NUM 3
+#define CONFIG_SPI1_TX_DMA_STREAM DMA_STREAM(CONFIG_SPI1_TX_DMA_NUMBER, CONFIG_SPI1_TX_DMA_STREAM_NUM)
+#define CONFIG_SPI1_TX_DMA_CHANNEL DMA_CHANNEL(3)
+#define CONFIG_SPI1_TX_DMA_PRIORITY DMA_PRIORITY(0)
+#define CONFIG_SPI1_TX_DMA_IRQ_PRIO 1
+#define CONFIG_SPI1_TX_DMA_IRQ_NUM DMA_IRQ_NUM(CONFIG_SPI1_TX_DMA_NUMBER, CONFIG_SPI1_TX_DMA_STREAM_NUM)
+//  <e> DMA RX
+//      <i> Enable DMA RX
+//      <o1> Number <2=>2
+//      <i> Select DMA number
+//      <o2> Stream <0=>0 <2=>2
+//      <i> Select DMA stream
+//      <o3> Channel <3=>3
+//      <i> Select DMA channel
+//      <o4> Priority <0=>Low <1=>Medium <2=>High <3=>Very High
+//      <i> Select DMA priority
+//      <o5> IRQ priority <0-15>
+//      <i> Select DMA IRQ priority
+//  </e>
+#define CONFIG_SPI1_RX_DMA 0
+#define CONFIG_SPI1_RX_DMA_NUMBER 2
+#define CONFIG_SPI1_RX_DMA_INS DMA_INS(CONFIG_SPI1_RX_DMA_NUMBER)
+#define CONFIG_SPI1_RX_DMA_STREAM_NUM 0
+#define CONFIG_SPI1_RX_DMA_STREAM DMA_STREAM(CONFIG_SPI1_RX_DMA_NUMBER, CONFIG_SPI1_RX_DMA_STREAM_NUM)
+#define CONFIG_SPI1_RX_DMA_CHANNEL DMA_CHANNEL(3)
+#define CONFIG_SPI1_RX_DMA_PRIORITY DMA_PRIORITY(0)
+#define CONFIG_SPI1_RX_DMA_IRQ_PRIO 1
+#define CONFIG_SPI1_RX_DMA_IRQ_NUM DMA_IRQ_NUM(CONFIG_SPI1_RX_DMA_NUMBER, CONFIG_SPI1_RX_DMA_STREAM_NUM)
+// </e>
+// </h>
+
+#if ((CONFIG_SPI1_TX_DMA == 1) || \
+     (CONFIG_SPI2_TX_DMA == 1) || \
+     (CONFIG_SPI3_TX_DMA == 1) || \
+     (CONFIG_SPI4_TX_DMA == 1) || \
+     (CONFIG_SPI5_TX_DMA == 1) || \
+     (CONFIG_SPI6_TX_DMA == 1))
+#define CONFIG_SPI_TX_DMA 1
+#endif
+#if ((CONFIG_SPI1_RX_DMA == 1) || \
+     (CONFIG_SPI2_RX_DMA == 1) || \
+     (CONFIG_SPI3_RX_DMA == 1) || \
+     (CONFIG_SPI4_RX_DMA == 1) || \
+     (CONFIG_SPI5_RX_DMA == 1) || \
+     (CONFIG_SPI6_RX_DMA == 1))
+#define CONFIG_SPI_RX_DMA 1
+#endif
+
 // <h> USART (Universal synchronous asynchronous receiver transmitter)
 //  <e> USART1
 //  <i> Configuration settings for OMNI Driver USART
 #define CONFIG_USART_NUM_1 1
 //      <o> USART1 TX Pin <0=>NC <1=>PA9 <2=>PB6
-#define CONFIG_USART1_TX_PIN_VAL 0
+#define CONFIG_USART1_TX_PIN_VAL 1
 #if (CONFIG_USART1_TX_PIN_VAL == 0)
 #define CONFIG_USART1_TX_DEF 0
 #elif (CONFIG_USART1_TX_PIN_VAL == 1)
@@ -236,7 +350,7 @@ extern "C" {
 #define CONFIG_USART1_TX_AF GPIO_AF7_USART1
 #endif /* CONFIG_USART1_TX_PIN_VAL */
 //      <o> USART1 RX Pin <0=>NC <1=>PA10 <2=>PB7
-#define CONFIG_USART1_RX_PIN_VAL 0
+#define CONFIG_USART1_RX_PIN_VAL 1
 #if (CONFIG_USART1_RX_PIN_VAL == 0)
 #define CONFIG_USART1_RX_DEF 0
 #elif (CONFIG_USART1_RX_PIN_VAL == 1)
@@ -263,7 +377,7 @@ extern "C" {
 //          <o5> IRQ priority <0-15>
 //          <i> Select DMA IRQ priority
 //      </e>
-#define CONFIG_USART1_TX_DMA 0
+#define CONFIG_USART1_TX_DMA 1
 #define CONFIG_USART1_TX_DMA_NUMBER 2
 #define CONFIG_USART1_TX_DMA_INS DMA_INS(CONFIG_USART1_TX_DMA_NUMBER)
 #define CONFIG_USART1_TX_DMA_STREAM_NUM 7
@@ -285,7 +399,7 @@ extern "C" {
 //          <o5> IRQ priority <0-15>
 //          <i> Select DMA IRQ priority
 //      </e>
-#define CONFIG_USART1_RX_DMA 0
+#define CONFIG_USART1_RX_DMA 1
 #define CONFIG_USART1_RX_DMA_NUMBER 2
 #define CONFIG_USART1_RX_DMA_INS DMA_INS(CONFIG_USART1_RX_DMA_NUMBER)
 #define CONFIG_USART1_RX_DMA_STREAM_NUM 2
@@ -974,6 +1088,12 @@ extern "C" {
 //  <e> USB OTG FS (USB Number 1)
 //  <i> Configuration settings for OMNI Driver USB OTG FS
 #define CONFIG_USB_OTG_FS 1
+//      <q> Enable VBUS Sensing
+//      <i> Enable VBUS Sensing
+#define CONFIG_USB_OTG_FS_VBUS_SENSING 0
+//      <q> Enable SOF Output
+//      <i> Enable SOF Output
+#define CONFIG_USB_OTG_FS_SOF 0
 //      <o> USB OTG FS DM Pin <0=>PA11
 #define CONFIG_USB_OTG_FS_DM_PIN_VAL 0
 #if (CONFIG_USB_OTG_FS_DM_PIN_VAL == 0)
@@ -1024,15 +1144,11 @@ extern "C" {
 //      <e> Device
 //      <i> Enable Device
 #define CONFIG_USB_OTG_FS_DEVICE 1
-//          <q> Enable VBUS Sensing
-//          <i> Enable VBUS Sensing
-#define CONFIG_USB_OTG_FS_VBUS_SENSING 0
-//          <q> Enable SOF Output
-//          <i> Enable SOF Output
-#define CONFIG_USB_OTG_FS_SOF
 //          <q> Enable Low Power
 //          <i> Enable Low Power
 #define CONFIG_USB_OTG_FS_LOW_POWER 0
+//          Endpoint Number
+#define CONFIG_USB_OTG_FS_ENDPOINT_NUMBER 4
 //          <h> FIFO Configuration
 //              <o> RX FIFO Size <0x10-0x400:0x10>
 //              <i> Set size of RX FIFO
@@ -1040,22 +1156,23 @@ extern "C" {
 //              <o> TX FIFO 0 Size <0x10-0x400:0x10>
 //              <i> Set size of TX FIFO 0
 #define CONFIG_USB_OTG_FS_TX_FIFO_0_SIZE 0x40
-//              <o> TX FIFO 1 Size <0x10-0x400:0x10>
+//              <o> TX FIFO 1 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 1
 #define CONFIG_USB_OTG_FS_TX_FIFO_1_SIZE 0x10
-//              <o> TX FIFO 2 Size <0x10-0x400:0x10>
+//              <o> TX FIFO 2 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 2
-#define CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE 0x10
-//              <o> TX FIFO 3 Size <0x10-0x400:0x10>
+#define CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE 0x00
+//              <o> TX FIFO 3 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 3
-#define CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE 0x10
+#define CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE 0x00
 //          </h>
 //      </e>
 
 //      <e> Host
 //      <i> Enable Host
 #define CONFIG_USB_OTG_FS_HOST 0
-
+//      Channel Number
+#define CONFIG_USB_OTG_FS_CHANNEL_NUMBER 8
 //          <e> VBUS Power Pin
 //          <i> Configure Pin to drive external VBUS switch
 //          <i> GPIO Port (x = A..H, y = 0..15) or (x = I, y = 0..11)
@@ -1099,6 +1216,12 @@ extern "C" {
 //      <i> Use dedicated DMA for transfers
 //      <i> If DMA is used all transfers data buffers must be 32-bit aligned
 #define CONFIG_USB_OTG_HS_DMA 0
+//      <q> Enable VBUS Sensing
+//      <i> Enable VBUS Sensing
+#define CONFIG_USB_OTG_HS_VBUS_SENSING 0
+//      <q> Enable SOF Output
+//      <i> Enable SOF Output
+#define CONFIG_USB_OTG_HS_SOF 0
 //      <o> USB OTG HS DM Pin <0=>PB14
 #define CONFIG_USB_OTG_HS_DM_PIN_VAL 0
 #if (CONFIG_USB_OTG_HS_DM_PIN_VAL == 0)
@@ -1243,15 +1366,11 @@ extern "C" {
 //      <e> Device
 //      <i> Enable Device
 #define CONFIG_USB_OTG_HS_DEVICE 0
-//          <q> Enable VBUS Sensing
-//          <i> Enable VBUS Sensing
-#define CONFIG_USB_OTG_HS_VBUS_SENSING 0
-//          <q> Enable SOF Output
-//          <i> Enable SOF Output
-#define CONFIG_USB_OTG_HS_SOF
 //          <q> Enable Low Power
 //          <i> Enable Low Power
 #define CONFIG_USB_OTG_HS_LOW_POWER 0
+//          Endpoint Number
+#define CONFIG_USB_OTG_HS_ENDPOINT_NUMBER 6
 //          <h> FIFO Configuration
 //              <o> RX FIFO Size <0x10-0x400:0x10>
 //              <i> Set size of RX FIFO
@@ -1259,28 +1378,29 @@ extern "C" {
 //              <o> TX FIFO 0 Size <0x10-0x400:0x10>
 //              <i> Set size of TX FIFO 0
 #define CONFIG_USB_OTG_HS_TX_FIFO_0_SIZE 0x80
-//              <o> TX FIFO 1 Size <0x10-0x400:0x10>
+//              <o> TX FIFO 1 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 1
 #define CONFIG_USB_OTG_HS_TX_FIFO_1_SIZE 0x10
-//              <o> TX FIFO 2 Size <0x10-0x400:0x10>
+//              <o> TX FIFO 2 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 2
-#define CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE 0x10
-//              <o> TX FIFO 3 Size <0x10-0x400:0x10>
+#define CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE 0x00
+//              <o> TX FIFO 3 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 3
-#define CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE 0x10
-//              <o> TX FIFO 4 Size <0x10-0x400:0x10>
+#define CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE 0x00
+//              <o> TX FIFO 4 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 4
-#define CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE 0x10
-//              <o> TX FIFO 5 Size <0x10-0x400:0x10>
+#define CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE 0x00
+//              <o> TX FIFO 5 Size <0x00-0x400:0x10>
 //              <i> Set size of TX FIFO 5
-#define CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE 0x10
+#define CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE 0x00
 //          </h>
 //      </e>
 
 //      <e> Host
 //      <i> Enable Host
 #define CONFIG_USB_OTG_HS_HOST 0
-
+//      Channel Number
+#define CONFIG_USB_OTG_HS_CHANNEL_NUMBER 12
 //          <e> VBUS Power Pin
 //          <i> Configure Pin to drive external VBUS switch
 //          <i> GPIO Port (x = A..H, y = 0..15) or (x = I, y = 0..11)
@@ -1315,6 +1435,82 @@ extern "C" {
 //      </e>
 // </e>
 // </h>
+
+#if (CONFIG_USB_OTG_HS == 1)
+#if (CONFIG_USB_OTG_HS_PHY == 1)
+#define USB_OTG_PHY                   PCD_PHY_ULPI
+#else
+#define USB_OTG_PHY                   PCD_PHY_EMBEDDED
+#endif /* CONFIG_USB_OTG_HS_PHY == 1 */
+#if (CONFIG_USB_OTG_HS_VBUS_SENSING == 1)
+#define USB_OTG_VBUS_SENSING_ENABLE   ENABLE
+#else
+#define USB_OTG_VBUS_SENSING_ENABLE   DISABLE
+#endif /* CONFIG_USB_OTG_HS_VBUS_SENSING == 1 */
+#if (CONFIG_USB_OTG_HS_SOF == 1)
+#define USB_OTG_SOF_ENABLE            ENABLE
+#else
+#define USB_OTG_SOF_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS_SOF == 1 */
+#if (CONFIG_USB_OTG_HS_DMA == 1)
+#define USB_OTG_DMA_ENABLE            ENABLE
+#else
+#define USB_OTG_DMA_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS_DMA == 1 */
+#else
+#define USB_OTG_PHY                   PCD_PHY_EMBEDDED
+#if (CONFIG_USB_OTG_FS_VBUS_SENSING == 1)
+#define USB_OTG_VBUS_SENSING_ENABLE   ENABLE
+#else
+#define USB_OTG_VBUS_SENSING_ENABLE   DISABLE
+#endif /* CONFIG_USB_OTG_FS_VBUS_SENSING == 1 */
+#if (CONFIG_USB_OTG_FS_SOF == 1)
+#define USB_OTG_SOF_ENABLE            ENABLE
+#else
+#define USB_OTG_SOF_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_FS_SOF == 1 */
+#define USB_OTG_DMA_ENABLE            DISABLE
+#endif /* CONFIG_USB_OTG_HS == 1 */
+
+#if (CONFIG_USB_OTG_HS_DEVICE == 1)
+// PCD configuration
+#define USB_OTG_ENDPOINT_NUMBER     CONFIG_USB_OTG_HS_ENDPOINT_NUMBER
+#if (CONFIG_USB_OTG_HS_LOW_POWER == 1)
+#define USB_OTG_LOW_POWER_ENABLE    ENABLE
+#else
+#define USB_OTG_LOW_POWER_ENABLE    DISABLE
+#endif /* CONFIG_USB_OTG_HS_LOW_POWER == 1 */
+
+// FIFO sizes
+#define CONFIG_USB_OTG_RX_FIFO_SIZE CONFIG_USB_OTG_HS_RX_FIFO_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_0_SIZE CONFIG_USB_OTG_HS_TX_FIFO_0_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_1_SIZE CONFIG_USB_OTG_HS_TX_FIFO_1_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_2_SIZE CONFIG_USB_OTG_HS_TX_FIFO_2_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_3_SIZE CONFIG_USB_OTG_HS_TX_FIFO_3_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_4_SIZE CONFIG_USB_OTG_HS_TX_FIFO_4_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_5_SIZE CONFIG_USB_OTG_HS_TX_FIFO_5_SIZE
+#else
+// PCD configuration
+#define USB_OTG_ENDPOINT_NUMBER     CONFIG_USB_OTG_FS_ENDPOINT_NUMBER
+#if (CONFIG_USB_OTG_FS_LOW_POWER == 1)
+#define USB_OTG_LOW_POWER_ENABLE    ENABLE
+#else
+#define USB_OTG_LOW_POWER_ENABLE    DISABLE
+#endif /* CONFIG_USB_OTG_FS_LOW_POWER == 1 */
+
+// FIFO sizes
+#define CONFIG_USB_OTG_RX_FIFO_SIZE CONFIG_USB_OTG_FS_RX_FIFO_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_0_SIZE CONFIG_USB_OTG_FS_TX_FIFO_0_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_1_SIZE CONFIG_USB_OTG_FS_TX_FIFO_1_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_2_SIZE CONFIG_USB_OTG_FS_TX_FIFO_2_SIZE
+#define CONFIG_USB_OTG_TX_FIFO_3_SIZE CONFIG_USB_OTG_FS_TX_FIFO_3_SIZE
+#endif /* CONFIG_USB_OTG_HS_DEVICE == 1 */
+
+#if (CONFIG_USB_OTG_HS_HOST == 1)
+#define CONFIG_USB_OTG_CHANNEL_NUMBER CONFIG_USB_OTG_HS_CHANNEL_NUMBER
+#else
+#define CONFIG_USB_OTG_CHANNEL_NUMBER CONFIG_USB_OTG_FS_CHANNEL_NUMBER
+#endif /* CONFIG_USB_OTG_HS_HOST == 1 */
 
 //-------- <<< end of configuration section >>> --------------------------------
 
