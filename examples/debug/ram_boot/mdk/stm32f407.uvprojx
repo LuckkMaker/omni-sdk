@@ -1249,7 +1249,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,USE_FULL_LL_DRIVER,STM32F407xx</Define>
+              <Define>USE_HAL_DRIVER,USE_FULL_LL_DRIVER,STM32F407xx,VECT_TAB_SRAM</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\..\omni\targets\stm;..\..\..\..\omni\targets\stm\stm32f4;..\..\..\..\omni\targets\stm\stm32f4\stm32cubef4_fw;..\..\..\..\omni\targets\stm\stm32f4\stm32cubef4_fw\STM32F4xx_HAL_Driver\Inc;..\..\..\..\omni\targets\stm\stm32f4\stm32cubef4_fw\STM32F4xx_HAL_Driver\Inc\Legacy;..\..\..\..\omni\targets\stm\stm32f4\stm32cubef4_fw\CMSIS\Device\ST\STM32F4xx\Include;..\..\..\..\omni\targets\stm\stm32f4\drivers\include;..\..\..\..\omni\cmsis\cortex_m\Include;..\..\..\..\omni\cmsis\cortex_m\Include\m-profile;..\..\..\..\omni;..\..\..\..\omni\include;..\..\..\..\omni\components\include;..\..\..\..\omni\drivers\include;..\omni\stm32f407ig\device;..\omni\stm32f407ig\startup;..\build\omni\kconfig;..\application</IncludePath>
             </VariousControls>
