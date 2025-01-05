@@ -921,7 +921,7 @@
       <TargetName>ram_debug</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6220000::V6.22::ARMCLANG</pCCUsed>
+      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -963,7 +963,7 @@
           <OutputName>project</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\Listings\stm32f407\</ListingPath>
@@ -1047,7 +1047,7 @@
             <Capability>1</Capability>
             <DriverSelection>4100</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
+          <bUseTDR>1</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -1249,7 +1249,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_HAL_DRIVER,USE_FULL_LL_DRIVER,STM32F407xx</Define>
+              <Define>USE_HAL_DRIVER,USE_FULL_LL_DRIVER,STM32F407xx,VECT_TAB_SRAM</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\..\omni\targets\stm;..\..\..\..\omni\targets\stm\stm32f4;..\..\..\..\omni\targets\stm\stm32f4\stm32cubef4_fw;..\..\..\..\omni\targets\stm\stm32f4\stm32cubef4_fw\STM32F4xx_HAL_Driver\Inc;..\..\..\..\omni\targets\stm\stm32f4\stm32cubef4_fw\STM32F4xx_HAL_Driver\Inc\Legacy;..\..\..\..\omni\targets\stm\stm32f4\stm32cubef4_fw\CMSIS\Device\ST\STM32F4xx\Include;..\..\..\..\omni\targets\stm\stm32f4\drivers\include;..\..\..\..\omni\cmsis\cortex_m\Include;..\..\..\..\omni\cmsis\cortex_m\Include\m-profile;..\..\..\..\omni;..\..\..\..\omni\include;..\..\..\..\omni\components\include;..\..\..\..\omni\drivers\include;..\omni\stm32f407ig\device;..\omni\stm32f407ig\startup;..\build\omni\kconfig;..\application</IncludePath>
             </VariousControls>

@@ -32,11 +32,6 @@
 // STM32F407IG PE5
 #define LED_PIN GET_PIN(E, 6)
 
-uint32_t tick_start = 0;
-uint32_t tick_start_us = 0;
-uint32_t tick;
-uint32_t tick_us;
-
 /**
  * @brief The application entry point.
  * 
@@ -48,11 +43,7 @@ int main(void) {
     while (1) {
         // Do something
         gpio_driver.toggle(LED_PIN);
-        tick_start = timer_driver.get_tick(1000);
-        tick_start_us = timer_driver.get_tick(10000000);
         timer_driver.delay_ms(500);
-        tick = timer_driver.get_tick(1000);
-        tick_us = timer_driver.get_tick(10000000);
     }
 }
 
@@ -60,6 +51,8 @@ int main(void) {
  * @brief Setup the application
  */
 void setup(void) {
+    driver_init();
+
     gpio_driver_config_t gpio1_config = {
         .mode = GPIO_MODE_PP_OUTPUT,
         .pull = GPIO_PULL_NONE,

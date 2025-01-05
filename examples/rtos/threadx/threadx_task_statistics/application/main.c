@@ -79,6 +79,8 @@ static void uart1_event_callback(uint32_t event);
  * @return int 
  */
 int main(void) {
+    setup();
+
     // Enter the ThreadX kernel
     tx_kernel_enter();
 
@@ -90,6 +92,8 @@ int main(void) {
  * @brief Setup the application
  */
 void setup(void) {
+    driver_init();
+
     gpio_driver_config_t gpio1_config = {
         .mode = GPIO_MODE_PP_OUTPUT,
         .pull = GPIO_PULL_NONE,
@@ -164,7 +168,6 @@ static void start_thread_entry(ULONG parameter) {
     EXECUTION_TIME delta_total_time = 0;
 
     // Setup the application
-    setup();
 
     // Create the debug printf mutex
     tx_mutex_create(&debug_printf_mutex, "Debug Printf Mutex", TX_NO_INHERIT);

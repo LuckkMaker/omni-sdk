@@ -102,6 +102,7 @@ int main(void) {
  * @brief Setup the application
  */
 void setup(void) {
+    driver_init();
 }
 
 /**

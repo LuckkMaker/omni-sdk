@@ -61,7 +61,7 @@ kconfigLog.txt
 # MDK
 *.scvd
 *.uvguix.*
-*.ini
+JLinkSettings.ini
 *.bin
 JLinkLog.txt
 DebugConfig/

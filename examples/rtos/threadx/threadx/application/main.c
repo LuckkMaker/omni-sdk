@@ -55,6 +55,8 @@ static void led_thread_entry(ULONG parameter);
  * @return int 
  */
 int main(void) {
+    setup();
+
     // Enter the ThreadX kernel
     tx_kernel_enter();
 
@@ -66,6 +68,8 @@ int main(void) {
  * @brief Setup the application
  */
 void setup(void) {
+    driver_init();
+
     gpio_driver_config_t gpio1_config = {
         .mode = GPIO_MODE_PP_OUTPUT,
         .pull = GPIO_PULL_NONE,
@@ -107,7 +111,6 @@ void tx_application_define(void* first_unused_memory) {
 
 static void start_thread_entry(ULONG parameter) {
     // Setup the application
-    setup();
 
     while (1) {
         tx_thread_sleep(100);

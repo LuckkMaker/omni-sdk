@@ -49,6 +49,8 @@ void watchdog_init(void) {
     // TODO: Add watchdog initialization
 }
 
+#if 1
+
 /**
   * @brief This function configures the source of the time base.
   *        The time source is configured  to have 1ms time base with a dedicated 
@@ -100,3 +102,12 @@ void HAL_SuspendTick(void) {
   */
 void HAL_ResumeTick(void) {
 }
+
+#else
+
+void SysTick_Handler(void)
+{
+  HAL_IncTick();
+}
+
+#endif

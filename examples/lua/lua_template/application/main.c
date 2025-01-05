@@ -58,6 +58,8 @@ int main(void) {
  * @brief Setup the application
  */
 void setup(void) {
+    driver_init();
+
     SEGGER_RTT_Init();
 
     lua_state = luaL_newstate();

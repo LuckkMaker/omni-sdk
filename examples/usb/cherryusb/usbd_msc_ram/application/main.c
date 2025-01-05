@@ -48,6 +48,8 @@ int main(void) {
  * @brief Setup the application
  */
 void setup(void) {
+    driver_init();
+
     // Initialize GPIO
     gpio_driver_config_t gpio1_config = {
         .mode = GPIO_MODE_PP_OUTPUT,

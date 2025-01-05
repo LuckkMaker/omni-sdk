@@ -21,7 +21,6 @@
   */
 
 #include "stm32h7xx.h"
-#include "drivers/init.h"
 
 /*---------------------------------------------------------------------------
   External References
@@ -398,10 +397,6 @@ __NO_RETURN void Reset_Handler(void)
 
     SystemInit();                    /* CMSIS System Initialization */
 
-#if defined(CONFIG_OMNI_DRIVER)
-    driver_init();                   /* Initialize drivers */
-#endif /* CONFIG_OMNI_DRIVER */
-
     __PROGRAM_START();               /* Enter PreMain (C library entry point) */
 #else
     __set_MSP((uint32_t)(&_estack));
@@ -426,10 +421,6 @@ __NO_RETURN void Reset_Handler(void)
     SystemInit();                    /* CMSIS System Initialization */
 
     __libc_init_array();             /* Initialize C Library */
-
-#if defined(CONFIG_OMNI_DRIVER)
-    driver_init();                   /* Initialize drivers */
-#endif /* CONFIG_OMNI_DRIVER */
 
     main();                          /* Enter main */
 
